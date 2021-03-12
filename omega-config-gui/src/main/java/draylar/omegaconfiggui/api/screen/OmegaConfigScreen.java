@@ -50,7 +50,7 @@ public class OmegaConfigScreen<T extends Config> extends Screen {
                 Class<?> unbox = TypeWidgets.unbox(field.getType());
 
                 // label
-                addChild(new LabelWidget(150, 5 + 20 * over, new LiteralText(field.getName())));
+                addChild(new LabelWidget(150, 15 + 20 * over, new LiteralText(field.getName())));
 
                 // get value
                 field.setAccessible(true);
@@ -60,9 +60,9 @@ public class OmegaConfigScreen<T extends Config> extends Screen {
                 AbstractButtonWidget button;
                 WidgetSupplier<Object, AbstractButtonWidget> widgetSupplier = (WidgetSupplier<Object, AbstractButtonWidget>) TypeWidgets.get(unbox);
                 if(widgetSupplier != null) {
-                    button = widgetSupplier.create(250, 5 + 20 * over, 50, 50, new LiteralText(field.getName()), value);
+                    button = widgetSupplier.create(250, 5 + 25 * over, 50, 20, new LiteralText(field.getName()), value);
                 } else {
-                    button = new TextFieldWidget(client.textRenderer, 250, 5 + 20 * over, 50, 20, new LiteralText(field.getName()));
+                    button = new TextFieldWidget(client.textRenderer, 250, 5 + 25 * over, 50, 20, new LiteralText(field.getName()));
                 }
 
                 fieldWidgets.put(field, new Pair<>(widgetSupplier, button));
@@ -114,9 +114,8 @@ public class OmegaConfigScreen<T extends Config> extends Screen {
 
     @Override
     public void renderBackground(MatrixStack matrices) {
-        super.renderBackground(matrices);
-
-        MinecraftClient.getInstance().getTextureManager().bindTexture(new Identifier("textures/block/dirt.png"));
-        drawTexture(matrices, 0, 0, 0, 0, 16, 16);
+        // TODO: option for transparent BG
+//        this.fillGradient(matrices, 0, 0, this.width, this.height, -1072689136, -804253680);
+        this.renderBackgroundTexture(0);
     }
 }

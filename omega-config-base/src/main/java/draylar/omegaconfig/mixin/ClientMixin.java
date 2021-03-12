@@ -10,7 +10,6 @@ import net.minecraft.client.RunArgs;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -47,7 +46,7 @@ public class ClientMixin {
 
                         // find configuration class by name
                         for (Config config : OmegaConfig.getRegisteredConfigurations()) {
-                            if (config.getFileName().equals(name)) {
+                            if (config.getName().equals(name)) {
                                 // bring values from server to object
                                 Config server = OmegaConfig.GSON.fromJson(json, config.getClass());
 
@@ -83,7 +82,7 @@ public class ClientMixin {
     private void restoreConfigurations(Screen screen, CallbackInfo ci) {
         for(Config config : savedClientConfig) {
             for(Config potentiallySynced : OmegaConfig.getRegisteredConfigurations()) {
-                if(config.getFileName().equals(potentiallySynced.getFileName())) {
+                if(config.getName().equals(potentiallySynced.getName())) {
                     boolean allConfigSyncs = Arrays.stream(config.getClass().getAnnotations()).anyMatch(annotation -> annotation instanceof Syncing);
 
                     // mutate object in registered configurations

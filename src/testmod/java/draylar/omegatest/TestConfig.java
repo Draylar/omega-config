@@ -24,7 +24,7 @@ public class TestConfig implements Config {
     }
 
     @Override
-    public String getFileName() {
+    public String getName() {
         return "test-config";
     }
 

@@ -8,8 +8,6 @@ import draylar.omegaconfig.api.SyncableExclusionStrategy;
 import draylar.omegaconfig.exception.NoValidConstructorException;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
-import net.fabricmc.fabric.api.networking.v1.ServerLoginNetworking;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
@@ -101,7 +99,7 @@ public class OmegaConfig implements ModInitializer {
         }
     }
 
-    private static  <T extends Config> void  writeConfig(Class<T> configClass, T instance) {
+    public static  <T extends Config> void  writeConfig(Class<T> configClass, T instance) {
         // Write the config to disk with the default values.
         String json = GSON.toJson(instance);
 
@@ -199,7 +197,7 @@ public class OmegaConfig implements ModInitializer {
     }
 
     public static Path getConfigPath(Config config) {
-        return Paths.get(FabricLoader.getInstance().getConfigDir().toString(), String.format("%s.json", config.getFileName()));
+        return Paths.get(FabricLoader.getInstance().getConfigDir().toString(), String.format("%s.json", config.getName()));
     }
 
     public static boolean configExists(Config config) {
