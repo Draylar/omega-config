@@ -9,7 +9,6 @@
   ],
   "contact": {},
   "license": "MIT",
-  "icon": "assets/omega-config/icon.png",
   "environment": "*",
   "entrypoints": {
     "client": [
