@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "id": "omega-config",
+  "version": "${version}",
+  "name": "OmegaConfig",
+  "description": "The last config solution you will ever use.",
+  "authors": [
+    "Draylar"
+  ],
+  "contact": {},
+  "license": "MIT",
+  "icon": "assets/omega-config/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "draylar.omegaconfig.OmegaConfig"
+    ]
+  },
+  "mixins": [
+    "omega-config.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.11.2",
+    "fabric": "*",
+    "minecraft": "1.16.5"
+  }
+}

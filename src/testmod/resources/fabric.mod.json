@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "id": "omega-config-test",
+  "version": "${version}",
+  "name": "OmegaConfig Test",
+  "description": "Test mod for Omega Config.",
+  "authors": [
+    "Draylar"
+  ],
+  "contact": {},
+  "license": "MIT",
+  "icon": "assets/omega-config/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "draylar.omegaconfig.OmegaConfigTest"
+    ],
+    "client": [
+      "draylar.omegaconfig.OmegaConfigClientTest"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.11.2",
+    "fabric": "*",
+    "minecraft": "1.16.5"
+  }
+}
