@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
-  "id": "omega-config-test",
+  "id": "omega-config-gui",
   "version": "${version}",
-  "name": "OmegaConfig Test",
-  "description": "Test mod for Omega Config.",
+  "name": "OmegaConfigGui",
+  "description": "GUI support for Omega Config.",
   "authors": [
     "Draylar"
   ],
@@ -12,13 +12,13 @@
   "icon": "assets/omega-config/icon.png",
   "environment": "*",
   "entrypoints": {
-    "main": [
-      "draylar.omegatest.OmegaTestMain"
-    ],
     "client": [
-      "draylar.omegatest.OmegaTestClient"
+      "draylar.omegaconfiggui.OmegaConfigGui"
     ]
   },
+  "mixins": [
+    "omega-config-gui.mixins.json"
+  ],
   "depends": {
     "fabricloader": ">=0.11.2",
     "fabric": "*",
