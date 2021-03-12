@@ -2,7 +2,6 @@ package draylar.omegaconfig.api;
 
 import draylar.omegaconfig.OmegaConfig;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.StringTag;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
@@ -14,19 +13,12 @@ public interface Config {
      * Useful for saving modified values during runtime.
      */
     default void save() {
-
-    }
-
-    /**
-     * @return  an instance of this Config class with all default values.
-     */
-    default Config getDefault() {
-        return null;
+        OmegaConfig.writeConfig((Class<Config>) getClass(), this);
     }
 
     default CompoundTag writeSyncingTag() {
         CompoundTag tag = new CompoundTag();
-        tag.putString("ConfigName", getFileName());
+        tag.putString("ConfigName", getName());
 
         // all config vs. individual fields
         if(Arrays.stream(getClass().getAnnotations()).anyMatch(annotation -> annotation instanceof Syncing)) {
@@ -53,8 +45,34 @@ public interface Config {
         return hasSyncingField | classSyncs;
     }
 
-    String getFileName();
+    /**
+     * Returns the name of this config, which is used for the name of the config file saved to disk, and syncing.
+     *
+     * <p>
+     * The name returned by this method should generally follow Identifier conventions, but this is not enforced:
+     * <ul>
+     *     <li>Lowercase
+     *     <li>No special characters ($, %, ^, etc.)
+     *     <li>No spaces
+     *
+     * @return  the name of this config, which is used for the name of the config file saved to disk.
+     */
+    String getName();
 
+    /**
+     * Returns the modid associated with this configuration class.
+     *
+     * <p>
+     * This functionality is used for libraries like ModMenu, which depend on
+     *  modids for configuration screen instances in their menu.
+     * If you are intending for this config to have a ModMenu config
+     *  screen, this method should return the modid specified in your fabric.mod.json.
+     *
+     * If this method is not overridden, null will be returned, which
+     *  means this config is not explicitly associated with any particular mod.
+     *
+     * @return  the modid of the mod associated with this config, or null if none was specified
+     */
     @Nullable
     default String getModid() {
         return null;

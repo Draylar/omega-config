@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import draylar.omegaconfig.api.Comment;
 import draylar.omegaconfig.api.Config;
-import draylar.omegaconfig.api.SyncableExclusionStrategy;
+import draylar.omegaconfig.gson.SyncableExclusionStrategy;
 import draylar.omegaconfig.exception.NoValidConstructorException;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.ModInitializer;

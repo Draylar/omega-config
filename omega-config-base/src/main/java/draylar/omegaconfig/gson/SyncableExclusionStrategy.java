@@ -1,7 +1,8 @@
-package draylar.omegaconfig.api;
+package draylar.omegaconfig.gson;
 
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
+import draylar.omegaconfig.api.Syncing;
 
 public class SyncableExclusionStrategy implements ExclusionStrategy {
 
