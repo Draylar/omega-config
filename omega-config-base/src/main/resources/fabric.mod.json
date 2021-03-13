@@ -10,11 +10,6 @@
   "contact": {},
   "license": "MIT",
   "environment": "*",
-  "entrypoints": {
-    "main": [
-      "draylar.omegaconfig.OmegaConfig"
-    ]
-  },
   "mixins": [
     "omega-config.mixins.json"
   ],

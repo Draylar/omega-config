@@ -4,10 +4,9 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import draylar.omegaconfig.api.Comment;
 import draylar.omegaconfig.api.Config;
-import draylar.omegaconfig.gson.SyncableExclusionStrategy;
 import draylar.omegaconfig.exception.NoValidConstructorException;
+import draylar.omegaconfig.gson.SyncableExclusionStrategy;
 import io.netty.buffer.Unpooled;
-import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
@@ -27,7 +26,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 
-public class OmegaConfig implements ModInitializer {
+public class OmegaConfig {
 
     private static final Logger LOGGER = LogManager.getLogger();
     private static final List<Config> REGISTERED_CONFIGURATIONS = new ArrayList<>();
@@ -36,8 +35,7 @@ public class OmegaConfig implements ModInitializer {
     public static final Identifier CONFIG_SYNC_PACKET = new Identifier("omegaconfig", "sync");
     public static final Gson SYNC_ONLY_GSON = new GsonBuilder().addSerializationExclusionStrategy(new SyncableExclusionStrategy()).setPrettyPrinting().create();
 
-    @Override
-    public void onInitialize() {
+    static {
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
             server.execute(() -> {
                 PacketByteBuf packet = new PacketByteBuf(Unpooled.buffer());

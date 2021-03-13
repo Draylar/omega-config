@@ -1,5 +1,7 @@
 import java.nio.charset.StandardCharsets
 
+// this build.gradle is tweaked from CCA: https://github.com/OnyxStudios/Cardinal-Components-API/blob/master/build.gradle
+
 buildscript {
     repositories {
         mavenLocal()
@@ -13,7 +15,7 @@ buildscript {
 }
 
 plugins {
-    id "fabric-loom" version "0.6-SNAPSHOT" apply false
+    id "fabric-loom" version "0.7-SNAPSHOT"
     id "maven-publish"
     id "java-library"
 }
@@ -74,8 +76,17 @@ subprojects {
     publishing {
         publications {
             mavenJava(MavenPublication) {
-                artifact(file("${project.buildDir}/libs/${archivesBaseName}-${project.mod_version}.jar")) {
+                artifact(remapJar) {
+                    builtBy remapJar
+                }
+
+                artifact(sourcesJar) {
+                    builtBy remapSourcesJar
+                }
+
+                artifact(file("${project.buildDir}/libs/${archivesBaseName}-${project.mod_version}-min.jar")) {
                     builtBy(remapJar)
+                    classifier = 'min'
                 }
 
                 pom.withXml {
@@ -104,6 +115,7 @@ subprojects {
         renamesourcefileattribute 'SourceFile'
         keepattributes 'Signature,Exceptions,InnerClasses,PermittedSubclasses,EnclosingMethod,Deprecated,SourceFile,LineNumberTable'
         keepattributes '*Annotation*'
+
         keep 'public class * { \
         public protected *; \
     }'
@@ -118,10 +130,13 @@ subprojects {
         <methods>;\
     }'
     }
+
+    remapJar.finalizedBy proguard
 }
 
 allprojects {
     apply plugin: "fabric-loom"
+
     sourceCompatibility = targetCompatibility = JavaVersion.VERSION_1_8
     version = System.getenv("TRAVIS_TAG") ?: project.mod_version
 
@@ -191,24 +206,11 @@ repositories {
 }
 
 dependencies {
-    minecraft "com.mojang:minecraft:${project.minecraft_version}"
-    mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
-    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-
-    // Fabric API. This is technically optional, but you probably want it anyway.
-    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-
-    modImplementation "com.terraformersmc:modmenu:1.16.8"
+    compile project(":omega-config-base")
+    compile project(":omega-config-gui")
 
     afterEvaluate {
         testmodImplementation sourceSets.main.output
-    }
-
-    afterEvaluate {
-        subprojects.each {
-            api it
-            include it
-        }
     }
 }
 

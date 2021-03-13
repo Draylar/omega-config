@@ -7,9 +7,6 @@ import draylar.omegaconfiggui.mixin.ModMenuAccessor;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
-import java.util.HashMap;
-import java.util.Map;
-
 @Environment(EnvType.CLIENT)
 public class ModMenuHelper {
 
