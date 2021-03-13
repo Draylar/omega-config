@@ -103,7 +103,7 @@ public class OmegaConfig {
 
         // Cursed time.
         List<String> lines = new ArrayList<>(Arrays.asList(json.split("\n")));
-        Map<Integer, String> insertions = new HashMap<>();
+        Map<Integer, String> insertions = new TreeMap<>();
         Map<String, String> keyToComments = new HashMap<>();
 
         // populate key -> comments map
@@ -136,7 +136,11 @@ public class OmegaConfig {
         }
 
         // insertions -> list
-        insertions.forEach(lines::add);
+        for (Map.Entry<Integer, String> entry : insertions.entrySet()) {
+            Integer key = entry.getKey();
+            String value = entry.getValue();
+            lines.add(key, value);
+        }
 
         // list -> string
         StringBuilder res = new StringBuilder();
