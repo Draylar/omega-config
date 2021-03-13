@@ -156,6 +156,7 @@ allprojects {
         modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
         modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
         modRuntime "com.terraformersmc:modmenu:1.16.8"
+        modCompileOnly "com.terraformersmc:modmenu:1.16.8"
     }
 
     processResources {
@@ -209,6 +210,7 @@ dependencies {
     compile project(":omega-config-base")
     compile project(":omega-config-gui")
     modRuntime "com.terraformersmc:modmenu:1.16.8"
+    modCompileOnly "com.terraformersmc:modmenu:1.16.8"
 
     afterEvaluate {
         testmodImplementation sourceSets.main.output
