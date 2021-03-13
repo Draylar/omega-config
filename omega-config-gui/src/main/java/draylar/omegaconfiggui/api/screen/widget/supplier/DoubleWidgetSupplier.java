@@ -3,16 +3,17 @@ package draylar.omegaconfiggui.api.screen.widget.supplier;
 import draylar.omegaconfiggui.api.screen.widget.DoubleFieldWidget;
 import draylar.omegaconfiggui.api.screen.widget.WidgetSupplier;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.LiteralText;
 
 public class DoubleWidgetSupplier implements WidgetSupplier<Double, DoubleFieldWidget> {
 
     @Override
-    public DoubleFieldWidget create(int x, int y, int width, int height, LiteralText prompt, Double value) {
+    public DoubleFieldWidget create(Screen parent, int x, int y, int width, int height, LiteralText prompt, Double value) {
         LiteralText text = new LiteralText(String.valueOf(value));
-        DoubleFieldWidget doubleField = new DoubleFieldWidget(MinecraftClient.getInstance().textRenderer, x, y, width, height, text);
-        doubleField.setText(text.asString());
-        return doubleField;
+        DoubleFieldWidget widget = new DoubleFieldWidget(parent, MinecraftClient.getInstance().textRenderer, x, y, width, height, text);
+        widget.setText(text.asString());
+        return widget;
     }
 
     @Override

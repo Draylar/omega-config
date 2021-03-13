@@ -14,15 +14,11 @@ import java.util.Map;
 public class ModMenuHelper {
 
     public static <T extends Config> void injectScreen(T config, OmegaConfigScreenSupplier<T> factory) {
-        // collect existing configurations
-        ImmutableMap<String, ConfigScreenFactory<?>> configScreenFactories = ModMenuAccessor.getConfigScreenFactories();
-        Map<String, ConfigScreenFactory<?>> nMap = new HashMap<>();
-        nMap.putAll(configScreenFactories);
-
-        // add our factory
-        nMap.put(config.getModid(), factory::get);
-
         // they will suspect nothing
-        ModMenuAccessor.setConfigScreenFactories(ImmutableMap.copyOf(nMap));
+        ModMenuAccessor.setConfigScreenFactories(
+                new ImmutableMap.Builder<String, ConfigScreenFactory<?>>()
+                        .putAll(ModMenuAccessor.getConfigScreenFactories())
+                        .put(config.getModid(), factory::get)
+                        .build());
     }
 }

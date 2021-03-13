@@ -14,6 +14,8 @@ public class TestConfig implements Config {
     @Comment(value = "I'm a double.")
     double doubleTest = 0.0;
 
+    String stringTest = "Hello, world!";
+
     @Comment(value = "This is an inner static class.")
     public Test test = new Test();
 

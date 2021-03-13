@@ -4,10 +4,10 @@
   "package": "draylar.omegaconfiggui.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "AbstractButtonWidgetAccessor",
     "ModMenuAccessor"
   ],
   "client": [
-
   ],
   "injectors": {
     "defaultRequire": 1

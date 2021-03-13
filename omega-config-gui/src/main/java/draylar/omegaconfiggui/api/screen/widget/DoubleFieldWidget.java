@@ -1,13 +1,13 @@
 package draylar.omegaconfiggui.api.screen.widget;
 
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
 
-public class DoubleFieldWidget extends TextFieldWidget {
+public class DoubleFieldWidget extends BaseTextFieldWidget {
 
-    public DoubleFieldWidget(TextRenderer textRenderer, int x, int y, int width, int height, Text text) {
-        super(textRenderer, x, y, width, height, text);
+    public DoubleFieldWidget(Screen parent, TextRenderer textRenderer, int x, int y, int width, int height, Text text) {
+        super(parent, textRenderer, x, y, width, height, text);
     }
 
     @Override

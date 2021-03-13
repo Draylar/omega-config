@@ -1,5 +1,6 @@
 package draylar.omegaconfiggui.api.screen;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import draylar.omegaconfig.api.Config;
 import draylar.omegaconfiggui.api.screen.widget.LabelWidget;
 import draylar.omegaconfiggui.api.screen.widget.TypeWidgets;
@@ -11,6 +12,9 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.client.render.BufferBuilder;
+import net.minecraft.client.render.Tessellator;
+import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.Identifier;
@@ -50,7 +54,7 @@ public class OmegaConfigScreen<T extends Config> extends Screen {
                 Class<?> unbox = TypeWidgets.unbox(field.getType());
 
                 // label
-                addChild(new LabelWidget(150, 15 + 20 * over, new LiteralText(field.getName())));
+                addChild(new LabelWidget(150, 15 + height / 6 + 20 * over, new LiteralText(field.getName())));
 
                 // get value
                 field.setAccessible(true);
@@ -60,9 +64,9 @@ public class OmegaConfigScreen<T extends Config> extends Screen {
                 AbstractButtonWidget button;
                 WidgetSupplier<Object, AbstractButtonWidget> widgetSupplier = (WidgetSupplier<Object, AbstractButtonWidget>) TypeWidgets.get(unbox);
                 if(widgetSupplier != null) {
-                    button = widgetSupplier.create(250, 5 + 25 * over, 50, 20, new LiteralText(field.getName()), value);
+                    button = widgetSupplier.create(this,250, 5 + height / 6 + 25 * over, 100, 20, new LiteralText(field.getName()), value);
                 } else {
-                    button = new TextFieldWidget(client.textRenderer, 250, 5 + 25 * over, 50, 20, new LiteralText(field.getName()));
+                    button = new TextFieldWidget(client.textRenderer, 250, 5 + height / 6 + 25 * over, 100, 20, new LiteralText(field.getName()));
                 }
 
                 fieldWidgets.put(field, new Pair<>(widgetSupplier, button));
@@ -116,6 +120,22 @@ public class OmegaConfigScreen<T extends Config> extends Screen {
     public void renderBackground(MatrixStack matrices) {
         // TODO: option for transparent BG
 //        this.fillGradient(matrices, 0, 0, this.width, this.height, -1072689136, -804253680);
-        this.renderBackgroundTexture(0);
+        renderCustomBackgroundTexture(0, 64, 64, 64, 0, 0, this.height, this.width);
+        renderCustomBackgroundTexture(0, 32, 32, 32, 0, this.height / 8, this.height / 8 * 6, this.width);
+        textRenderer.draw(matrices, config.getName(), width / 2f - textRenderer.getWidth(config.getName()) / 2f, 10, 0xffffff);
+    }
+
+    public void renderCustomBackgroundTexture(int vOffset, int r, int g, int b, int x, int y, int height, int width) {
+        Tessellator tessellator = Tessellator.getInstance();
+        BufferBuilder bufferBuilder = tessellator.getBuffer();
+        this.client.getTextureManager().bindTexture(OPTIONS_BACKGROUND_TEXTURE);
+        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+
+        bufferBuilder.begin(7, VertexFormats.POSITION_TEXTURE_COLOR);
+        bufferBuilder.vertex(x, height + y, 0.0D).texture(0.0F, (float)height / 32.0F + (float)vOffset).color(r, g, b, 255).next();
+        bufferBuilder.vertex(width + x, height + y, 0.0D).texture((float)width / 32.0F, (float)height / 32.0F + (float)vOffset).color(r, g, b, 255).next();
+        bufferBuilder.vertex(width + x, y, 0.0D).texture((float)width / 32.0F, (float)vOffset).color(r, g, b, 255).next();
+        bufferBuilder.vertex(x, y, 0.0D).texture(0.0F, (float)vOffset).color(r, g, b, 255).next();
+        tessellator.draw();
     }
 }

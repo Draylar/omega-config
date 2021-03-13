@@ -3,27 +3,21 @@ package draylar.omegaconfiggui;
 import draylar.omegaconfig.api.Config;
 import draylar.omegaconfiggui.api.screen.ModMenuHelper;
 import draylar.omegaconfiggui.api.screen.OmegaConfigScreen;
-import draylar.omegaconfiggui.api.screen.OmegaConfigScreenSupplier;
-import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
 
 @Environment(EnvType.CLIENT)
-public class OmegaConfigGui implements ClientModInitializer {
+public class OmegaConfigGui {
 
-    @Override
-    public void onInitializeClient() {
-
-    }
-
+    /**
+     * Registers a ModMenu configuration screen for the given {@link Config} instance.
+     * @param config  registered config to create a ModMenu screen for
+     * @param <T>     config type
+     */
     public static <T extends Config> void registerConfigScreen(T config) {
-        registerConfigScreen(config, parent -> new OmegaConfigScreen<>(config, parent));
-    }
-
-    public static <T extends Config> void registerConfigScreen(T config, OmegaConfigScreenSupplier<T> screenFactory) {
         if(FabricLoader.getInstance().isModLoaded("modmenu")) {
-            ModMenuHelper.injectScreen(config, screenFactory);
+            ModMenuHelper.injectScreen(config, parent -> new OmegaConfigScreen<>(config, parent));
         }
     }
 }
