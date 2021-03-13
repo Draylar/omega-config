@@ -123,3 +123,5 @@ run/
 /run/
 /server-run/
 /out.map
+/omega-config-base/out.map
+/omega-config-gui/out.map
