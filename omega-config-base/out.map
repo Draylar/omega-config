@@ -1,0 +1,53 @@
+draylar.omegaconfig.OmegaConfig -> draylar.omegaconfig.OmegaConfig:
+    org.apache.logging.log4j.Logger LOGGER -> a
+    java.util.List REGISTERED_CONFIGURATIONS -> b
+    com.google.gson.Gson GSON -> GSON
+    net.minecraft.class_2960 CONFIG_SYNC_PACKET -> CONFIG_SYNC_PACKET
+    com.google.gson.Gson SYNC_ONLY_GSON -> SYNC_ONLY_GSON
+    30:30:void <init>() -> <init>
+    41:63:void onInitialize() -> onInitialize
+    68:98:draylar.omegaconfig.api.Config register(java.lang.Class) -> register
+    104:153:void writeConfig(java.lang.Class,draylar.omegaconfig.api.Config) -> writeConfig
+    156:166:void addFieldComments(java.lang.reflect.Field,java.util.Map) -> a
+    180:195:java.lang.String getStartingWhitespace(java.lang.String) -> a
+    200:200:java.nio.file.Path getConfigPath(draylar.omegaconfig.api.Config) -> getConfigPath
+    204:204:boolean configExists(draylar.omegaconfig.api.Config) -> configExists
+    208:208:java.util.List getRegisteredConfigurations() -> getRegisteredConfigurations
+    145:145:void lambda$writeConfig$4(java.lang.StringBuilder,java.lang.String) -> a
+    81:81:boolean lambda$register$3(java.lang.String) -> b
+    42:62:void lambda$onInitialize$2(net.minecraft.class_3244,net.fabricmc.fabric.api.networking.v1.PacketSender,net.minecraft.server.MinecraftServer) -> a
+    43:61:void lambda$null$1(net.minecraft.class_3244) -> a
+    52:55:void lambda$null$0(net.minecraft.class_2499,draylar.omegaconfig.api.Config) -> a
+    32:37:void <clinit>() -> <clinit>
+draylar.omegaconfig.api.Comment -> draylar.omegaconfig.api.Comment:
+    java.lang.String value() -> value
+draylar.omegaconfig.api.Config -> draylar.omegaconfig.api.Config:
+    16:17:void save() -> save
+    20:36:net.minecraft.class_2487 writeSyncingTag() -> writeSyncingTag
+    43:45:boolean hasAnySyncable() -> hasAnySyncable
+    java.lang.String getName() -> getName
+    78:78:java.lang.String getModid() -> getModid
+    82:82:boolean hasMenu() -> hasMenu
+    44:44:boolean lambda$hasAnySyncable$3(java.lang.annotation.Annotation) -> a
+    43:43:boolean lambda$hasAnySyncable$2(java.lang.reflect.Field) -> a
+    43:43:boolean lambda$null$1(java.lang.annotation.Annotation) -> b
+    24:24:boolean lambda$writeSyncingTag$0(java.lang.annotation.Annotation) -> c
+draylar.omegaconfig.api.Syncing -> draylar.omegaconfig.api.Syncing:
+draylar.omegaconfig.exception.NoValidConstructorException -> draylar.omegaconfig.exception.NoValidConstructorException:
+    3:3:void <init>() -> <init>
+draylar.omegaconfig.gson.SyncableExclusionStrategy -> draylar.omegaconfig.gson.SyncableExclusionStrategy:
+    7:7:void <init>() -> <init>
+    11:11:boolean shouldSkipField(com.google.gson.FieldAttributes) -> shouldSkipField
+    16:16:boolean shouldSkipClass(java.lang.Class) -> shouldSkipClass
+    11:11:boolean lambda$shouldSkipField$0(java.lang.annotation.Annotation) -> a
+draylar.omegaconfig.mixin.ClientMixin -> draylar.omegaconfig.mixin.ClientMixin:
+    java.util.List savedClientConfig -> savedClientConfig
+    25:27:void <init>() -> <init>
+    34:77:void onReturn(net.minecraft.class_542,org.spongepowered.asm.mixin.injection.callback.CallbackInfo) -> onReturn
+    83:105:void restoreConfigurations(net.minecraft.class_437,org.spongepowered.asm.mixin.injection.callback.CallbackInfo) -> restoreConfigurations
+    90:90:boolean lambda$restoreConfigurations$5(java.lang.annotation.Annotation) -> lambda$restoreConfigurations$5
+    86:86:boolean lambda$restoreConfigurations$4(java.lang.annotation.Annotation) -> lambda$restoreConfigurations$4
+    35:76:void lambda$onReturn$3(net.fabricmc.fabric.api.network.PacketContext,net.minecraft.class_2540) -> lambda$onReturn$3
+    39:75:void lambda$null$2(net.minecraft.class_2487) -> lambda$null$2
+    42:73:void lambda$null$1(net.minecraft.class_2520) -> lambda$null$1
+    59:59:boolean lambda$null$0(java.lang.annotation.Annotation) -> lambda$null$0

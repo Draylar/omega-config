@@ -30,6 +30,38 @@ subprojects {
     apply plugin: 'maven-publish'
 
     archivesBaseName = project.name
+
+    task ('proguard', type: proguard.gradle.ProGuardTask) {
+        configuration '../proguard.conf'
+        verbose
+        injars  'build/libs/' + archivesBaseName + "-" + project.mod_version + "-" + project.minecraft_version + ".jar"
+        outjars '/build/libs/' +  archivesBaseName + "-min-" + project.mod_version + "-" + project.minecraft_version + ".jar"
+        printmapping 'out.map'
+        keepparameternames
+        renamesourcefileattribute 'SourceFile'
+        keepattributes 'Signature,Exceptions,InnerClasses,PermittedSubclasses,EnclosingMethod,Deprecated,SourceFile,LineNumberTable'
+        keepattributes '*Annotation*'
+        keep 'public class * { \
+        public protected *; \
+    }'
+        keepclassmembernames 'class * { \
+        java.lang.Class class$(java.lang.String); \
+        java.lang.Class class$(java.lang.String, boolean); \
+    }'
+
+        keepclassmembers 'class draylar.omegaconfig.mixin.* {\
+        <fields>;\
+        <init>();\
+        <methods>;\
+    }'
+    }
+
+    // Task for building base jars in all modules
+    task buildJar(type: Jar) {
+        archivesBaseName += "-" + project.mod_version + "-" + project.minecraft_version
+    }
+
+    buildJar.finalizedBy(proguard)
 }
 
 allprojects {
@@ -94,12 +126,6 @@ allprojects {
         }
     }
 
-    // Task for building base jars in all modules
-    task buildJar(type: Jar) {
-        archivesBaseName += "-" + project.mod_version + "-" + project.minecraft_version
-        from project(":omega-config-gui").sourceSets.main.java.srcDirs
-    }
-
     // Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
     // if it is present.
     // If you remove this task, sources will not be generated.
@@ -107,6 +133,11 @@ allprojects {
         classifier = "sources"
         from sourceSets.main.allSource
     }
+}
+
+// base build task
+task buildJar(type: Jar) {
+    archivesBaseName += "-" + project.mod_version + "-" + project.minecraft_version
 }
 
 dependencies {
@@ -146,29 +177,4 @@ publishing {
 tasks.withType(net.fabricmc.loom.task.AbstractRunTask) {
     classpath += sourceSets.testmod.runtimeClasspath
     classpath += sourceSets.testmod.output
-}
-
-task ('proguard', type: proguard.gradle.ProGuardTask) {
-    configuration 'proguard.conf'
-    verbose
-    injars  'build/libs/omega-config-1.0.0.jar'
-    outjars 'build/libs/out.jar'
-    printmapping 'out.map'
-    keepparameternames
-    renamesourcefileattribute 'SourceFile'
-    keepattributes 'Signature,Exceptions,InnerClasses,PermittedSubclasses,EnclosingMethod,Deprecated,SourceFile,LineNumberTable'
-    keepattributes '*Annotation*'
-    keep 'public class * { \
-        public protected *; \
-    }'
-    keepclassmembernames 'class * { \
-        java.lang.Class class$(java.lang.String); \
-        java.lang.Class class$(java.lang.String, boolean); \
-    }'
-
-    keepclassmembers 'class draylar.omegaconfig.mixin.* {\
-        <fields>;\
-        <init>();\
-        <methods>;\
-    }'
 }

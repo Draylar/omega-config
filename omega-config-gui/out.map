@@ -1,0 +1,72 @@
+draylar.omegaconfiggui.OmegaConfigGui -> draylar.omegaconfiggui.OmegaConfigGui:
+    11:11:void <init>() -> <init>
+    19:22:void registerConfigScreen(draylar.omegaconfig.api.Config) -> registerConfigScreen
+    20:20:draylar.omegaconfiggui.api.screen.OmegaConfigScreen lambda$registerConfigScreen$0(draylar.omegaconfig.api.Config,net.minecraft.class_437) -> a
+draylar.omegaconfiggui.api.screen.ModMenuHelper -> draylar.omegaconfiggui.api.screen.ModMenuHelper:
+    14:14:void <init>() -> <init>
+    18:23:void injectScreen(draylar.omegaconfig.api.Config,draylar.omegaconfiggui.api.screen.OmegaConfigScreenSupplier) -> injectScreen
+draylar.omegaconfiggui.api.screen.OmegaConfigScreen -> draylar.omegaconfiggui.api.screen.OmegaConfigScreen:
+    java.util.List validClasses -> a
+    draylar.omegaconfig.api.Config config -> b
+    net.minecraft.class_437 parent -> c
+    java.util.Map fieldWidgets -> d
+    35:41:void <init>(draylar.omegaconfig.api.Config,net.minecraft.class_437) -> <init>
+    45:97:void method_25426() -> method_25426
+    101:112:void method_25394(net.minecraft.class_4587,int,int,float) -> method_25394
+    116:117:void method_25419() -> method_25419
+    123:126:void method_25420(net.minecraft.class_4587) -> method_25420
+    129:140:void renderCustomBackgroundTexture(int,int,int,int,int,int,int,int) -> renderCustomBackgroundTexture
+    85:94:void lambda$init$3(net.minecraft.class_4185) -> a
+    87:91:void lambda$null$2(java.lang.reflect.Field,net.minecraft.class_3545) -> a
+    83:83:void lambda$init$1(net.minecraft.class_4185) -> b
+    50:50:boolean lambda$init$0(java.lang.reflect.Field) -> a
+    32:32:void <clinit>() -> <clinit>
+draylar.omegaconfiggui.api.screen.OmegaConfigScreenSupplier -> draylar.omegaconfiggui.api.screen.OmegaConfigScreenSupplier:
+    draylar.omegaconfiggui.api.screen.OmegaConfigScreen get(net.minecraft.class_437) -> get
+draylar.omegaconfiggui.api.screen.widget.BaseTextFieldWidget -> draylar.omegaconfiggui.api.screen.widget.BaseTextFieldWidget:
+    net.minecraft.class_437 parent -> parent
+    15:17:void <init>(net.minecraft.class_437,net.minecraft.class_327,int,int,int,int,net.minecraft.class_2561) -> <init>
+    22:29:void method_1876(boolean) -> method_1876
+    23:26:void lambda$setTextFieldFocused$0(net.minecraft.class_364) -> a
+draylar.omegaconfiggui.api.screen.widget.DoubleFieldWidget -> draylar.omegaconfiggui.api.screen.widget.DoubleFieldWidget:
+    10:11:void <init>(net.minecraft.class_437,net.minecraft.class_327,int,int,int,int,net.minecraft.class_2561) -> <init>
+    16:26:void method_1867(java.lang.String) -> method_1867
+draylar.omegaconfiggui.api.screen.widget.LabelWidget -> draylar.omegaconfiggui.api.screen.widget.LabelWidget:
+    int x -> a
+    int y -> b
+    net.minecraft.class_2561 message -> c
+    16:20:void <init>(int,int,net.minecraft.class_2561) -> <init>
+    24:25:void method_25394(net.minecraft.class_4587,int,int,float) -> method_25394
+draylar.omegaconfiggui.api.screen.widget.TypeWidgets -> draylar.omegaconfiggui.api.screen.widget.TypeWidgets:
+    java.util.Map CLASS_WIDGETS -> CLASS_WIDGETS
+    java.util.Map PRIMITIVE_TO_BOXED -> PRIMITIVE_TO_BOXED
+    35:35:draylar.omegaconfiggui.api.screen.widget.WidgetSupplier get(java.lang.Class) -> get
+    39:39:java.lang.Class unbox(java.lang.Class) -> unbox
+    42:44:void <init>() -> <init>
+    13:31:void <clinit>() -> <clinit>
+draylar.omegaconfiggui.api.screen.widget.WidgetSupplier -> draylar.omegaconfiggui.api.screen.widget.WidgetSupplier:
+    net.minecraft.class_339 create(net.minecraft.class_437,int,int,int,int,net.minecraft.class_2585,java.lang.Object) -> create
+    java.lang.Object get(net.minecraft.class_339) -> get
+draylar.omegaconfiggui.api.screen.widget.supplier.BooleanWidgetSupplier -> draylar.omegaconfiggui.api.screen.widget.supplier.BooleanWidgetSupplier:
+    8:8:void <init>() -> <init>
+    12:12:net.minecraft.class_4286 create(net.minecraft.class_437,int,int,int,int,net.minecraft.class_2585,java.lang.Boolean) -> create
+    17:17:java.lang.Boolean get(net.minecraft.class_4286) -> get
+    8:8:java.lang.Object get(net.minecraft.class_339) -> get
+    8:8:net.minecraft.class_339 create(net.minecraft.class_437,int,int,int,int,net.minecraft.class_2585,java.lang.Object) -> create
+draylar.omegaconfiggui.api.screen.widget.supplier.DoubleWidgetSupplier -> draylar.omegaconfiggui.api.screen.widget.supplier.DoubleWidgetSupplier:
+    9:9:void <init>() -> <init>
+    13:16:draylar.omegaconfiggui.api.screen.widget.DoubleFieldWidget create(net.minecraft.class_437,int,int,int,int,net.minecraft.class_2585,java.lang.Double) -> create
+    21:33:java.lang.Double get(draylar.omegaconfiggui.api.screen.widget.DoubleFieldWidget) -> get
+    9:9:java.lang.Object get(net.minecraft.class_339) -> get
+    9:9:net.minecraft.class_339 create(net.minecraft.class_437,int,int,int,int,net.minecraft.class_2585,java.lang.Object) -> create
+draylar.omegaconfiggui.api.screen.widget.supplier.StringWidgetSupplier -> draylar.omegaconfiggui.api.screen.widget.supplier.StringWidgetSupplier:
+    11:11:void <init>() -> <init>
+    15:18:net.minecraft.class_342 create(net.minecraft.class_437,int,int,int,int,net.minecraft.class_2585,java.lang.String) -> create
+    23:23:java.lang.String get(net.minecraft.class_342) -> get
+    11:11:java.lang.Object get(net.minecraft.class_339) -> get
+    11:11:net.minecraft.class_339 create(net.minecraft.class_437,int,int,int,int,net.minecraft.class_2585,java.lang.Object) -> create
+draylar.omegaconfiggui.mixin.AbstractButtonWidgetAccessor -> draylar.omegaconfiggui.mixin.AbstractButtonWidgetAccessor:
+    void callSetFocused(boolean) -> callSetFocused
+draylar.omegaconfiggui.mixin.ModMenuAccessor -> draylar.omegaconfiggui.mixin.ModMenuAccessor:
+    13:13:com.google.common.collect.ImmutableMap getConfigScreenFactories() -> getConfigScreenFactories
+    18:18:void setConfigScreenFactories(com.google.common.collect.ImmutableMap) -> setConfigScreenFactories
