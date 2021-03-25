@@ -123,4 +123,9 @@ public class NewTestConfig implements Config {
         public int killer_bunny_castle_seperation = 25;
         public int killer_bunny_castle_spacing = 50;
     }
+
+    @Override
+    public String getExtension() {
+        return "json5";
+    }
 }

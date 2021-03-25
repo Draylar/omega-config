@@ -7,6 +7,7 @@ public class OmegaTestMain implements ModInitializer {
 
     public static final TestConfig CONFIG = OmegaConfig.register(TestConfig.class);
     public static final NewTestConfig MO_CONFIG = OmegaConfig.register(NewTestConfig.class);
+    public static final NestedConfig NESTED = OmegaConfig.register(NestedConfig.class);
 
     @Override
     public void onInitialize() {

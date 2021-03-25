@@ -147,7 +147,9 @@ public class OmegaConfig {
         lines.forEach(str -> res.append(String.format("%s%n", str)));
 
         try {
-            Files.write(getConfigPath(instance), res.toString().getBytes());
+            Path configPath = getConfigPath(instance);
+            configPath.toFile().getParentFile().mkdirs();
+            Files.write(configPath, res.toString().getBytes());
         } catch (IOException ioException) {
             LOGGER.error(ioException);
             LOGGER.info(String.format("Write error, using default values for config %s.", configClass.toString()));
@@ -199,7 +201,7 @@ public class OmegaConfig {
     }
 
     public static Path getConfigPath(Config config) {
-        return Paths.get(FabricLoader.getInstance().getConfigDir().toString(), String.format("%s.json", config.getName()));
+        return Paths.get(FabricLoader.getInstance().getConfigDir().toString(), config.getDirectory(), String.format("%s.%s", config.getName(), config.getExtension()));
     }
 
     public static boolean configExists(Config config) {

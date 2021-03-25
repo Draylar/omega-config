@@ -78,7 +78,33 @@ public interface Config {
         return null;
     }
 
-    default boolean hasMenu() {
-        return true;
+    /**
+     * Returns the file extension of this config.
+     *
+     * <p>
+     * The file extension is used while serializing this config to a local file.
+     * The primary use-case of switching this would be supporting existing config files
+     *      when porting from other json5 config libraries.
+     *
+     * @return  the file extension of this config
+     */
+    default String getExtension() {
+        return "json";
+    }
+
+    /**
+     * Returns the directory of this config, assuming the base directory is the instance config directory.
+     *
+     * <p>
+     * By default, a config such as 'my_config' will appear at /config/my_config.json.
+     * If this method specifies a directory, such as 'configurations',
+     *      the config file will appear at /config/configurations/my_config.json.
+     *
+     * Nested directories can be specified by using a string such as 'configurations/client'.
+     *
+     * @return  the directory of this config
+     */
+    default String getDirectory() {
+        return "";
     }
 }
