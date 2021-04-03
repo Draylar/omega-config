@@ -1,13 +1,18 @@
 package draylar.omegatest;
 
 import draylar.omegaconfig.OmegaConfig;
+import draylar.omegatest.config.ClassConfigTest;
+import draylar.omegatest.config.NestedConfigTest;
+import draylar.omegatest.config.StructuresConfigTest;
+import draylar.omegatest.config.SimpleConfigTest;
 import net.fabricmc.api.ModInitializer;
 
 public class OmegaTestMain implements ModInitializer {
 
-    public static final TestConfig CONFIG = OmegaConfig.register(TestConfig.class);
-    public static final NewTestConfig MO_CONFIG = OmegaConfig.register(NewTestConfig.class);
-    public static final NestedConfig NESTED = OmegaConfig.register(NestedConfig.class);
+    public static final SimpleConfigTest CONFIG = OmegaConfig.register(SimpleConfigTest.class);
+    public static final StructuresConfigTest MO_CONFIG = OmegaConfig.register(StructuresConfigTest.class);
+    public static final NestedConfigTest NESTED = OmegaConfig.register(NestedConfigTest.class);
+    public static final ClassConfigTest CLASS = OmegaConfig.register(ClassConfigTest.class);
 
     @Override
     public void onInitialize() {

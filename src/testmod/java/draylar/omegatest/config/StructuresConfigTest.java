@@ -1,9 +1,9 @@
-package draylar.omegatest;
+package draylar.omegatest.config;
 
 import draylar.omegaconfig.api.Comment;
 import draylar.omegaconfig.api.Config;
 
-public class NewTestConfig implements Config {
+public class StructuresConfigTest implements Config {
     @Comment("Mo' Structures feature toggles.")
     public Features features = new Features();
 

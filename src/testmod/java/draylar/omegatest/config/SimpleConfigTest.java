@@ -1,4 +1,4 @@
-package draylar.omegatest;
+package draylar.omegatest.config;
 
 import draylar.omegaconfig.api.Comment;
 import draylar.omegaconfig.api.Config;
@@ -6,15 +6,15 @@ import draylar.omegaconfig.api.Syncing;
 import org.jetbrains.annotations.Nullable;
 
 @Syncing
-public class TestConfig implements Config {
+public class SimpleConfigTest implements Config {
 
     @Comment(value = "Hello!")
-    boolean v = false;
+    public boolean v = false;
 
     @Comment(value = "I'm a double.")
-    double doubleTest = 0.0;
+    public double doubleTest = 0.0;
 
-    String stringTest = "Hello, world!";
+    public String stringTest = "Hello, world!";
 
     @Comment(value = "This is an inner static class.")
     public Test test = new Test();

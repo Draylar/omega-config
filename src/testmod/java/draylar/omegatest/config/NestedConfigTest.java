@@ -1,8 +1,8 @@
-package draylar.omegatest;
+package draylar.omegatest.config;
 
 import draylar.omegaconfig.api.Config;
 
-public class NestedConfig implements Config {
+public class NestedConfigTest implements Config {
 
     public boolean test = false;
 
