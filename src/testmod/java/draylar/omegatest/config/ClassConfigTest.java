@@ -2,11 +2,14 @@ package draylar.omegatest.config;
 
 import draylar.omegaconfig.api.Config;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class ClassConfigTest implements Config {
 
-    public TestClass[] testClass = {
+    public List<TestClass> l = Arrays.asList(
             new TestClass()
-    };
+    );
 
     @Override
     public String getName() {

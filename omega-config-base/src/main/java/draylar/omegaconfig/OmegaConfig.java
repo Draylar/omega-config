@@ -85,9 +85,10 @@ public class OmegaConfig {
                     writeConfig(configClass, object);
                     REGISTERED_CONFIGURATIONS.add(object);
                     return object;
-                } catch (IOException ioException) {
-                    LOGGER.error(ioException);
-                    LOGGER.info(String.format("Read error, using default values for config %s.", configClass.toString()));
+                } catch (Exception e) {
+                    LOGGER.error(e);
+                    LOGGER.info(String.format("Encountered an error while reading %s config, falling back to default values.", config.getName()));
+                    LOGGER.info(String.format("If this problem persists, delete the config file %s and try again.", config.getName() + "." + config.getExtension()));
                 }
             }
 
