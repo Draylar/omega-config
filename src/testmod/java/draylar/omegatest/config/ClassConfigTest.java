@@ -8,7 +8,7 @@ import java.util.List;
 public class ClassConfigTest implements Config {
 
     public List<TestClass> l = Arrays.asList(
-            new TestClass()
+            new TestClass(true, 1, "hello")
     );
 
     @Override
@@ -17,7 +17,14 @@ public class ClassConfigTest implements Config {
     }
 
     public static class TestClass {
-        public boolean a = true;
-        public int b = 1;
+        public final boolean a;
+        public final int b;
+        public String c;
+
+        public TestClass(boolean a, int b, String c) {
+            this.a = a;
+            this.b = b;
+            this.c = c;
+        }
     }
 }
