@@ -94,6 +94,7 @@ public class OmegaConfig {
 
             return config;
         } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException exception) {
+            exception.printStackTrace();
             throw new NoValidConstructorException();
         }
     }

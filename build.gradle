@@ -15,7 +15,7 @@ buildscript {
 }
 
 plugins {
-    id "fabric-loom" version "0.7-SNAPSHOT"
+    id "fabric-loom" version "0.8-SNAPSHOT"
     id "maven-publish"
     id "java-library"
 }
@@ -207,8 +207,8 @@ repositories {
 }
 
 dependencies {
-    compile project(":omega-config-base")
-    compile project(":omega-config-gui")
+    implementation project(":omega-config-base")
+    implementation project(":omega-config-gui")
     modRuntime "com.terraformersmc:modmenu:1.16.8"
     modCompileOnly "com.terraformersmc:modmenu:1.16.8"
 
