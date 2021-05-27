@@ -3,8 +3,8 @@ package draylar.omegatest;
 import draylar.omegaconfig.OmegaConfig;
 import draylar.omegatest.config.ClassConfigTest;
 import draylar.omegatest.config.NestedConfigTest;
-import draylar.omegatest.config.StructuresConfigTest;
 import draylar.omegatest.config.SimpleConfigTest;
+import draylar.omegatest.config.StructuresConfigTest;
 import net.fabricmc.api.ModInitializer;
 
 public class OmegaTestMain implements ModInitializer {

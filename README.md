@@ -4,13 +4,15 @@
 
 *The last config library you will ever use.*
 
-ΩConfig is a hyper-minimal config library based on [Auto Config](https://github.com/shedaniel/AutoConfig). It aims to achieve
-the following goals:
+ΩConfig is a hyper-minimal config library based on [Auto Config](https://github.com/shedaniel/AutoConfig). It aims to
+achieve the following goals:
+
 - Be lightweight (<10 KB) for JIJ usage
 - Exceedingly simple design & API for developers
 - Intuition and usability for players
 
 The following is an example of a simple ΩConfig setup:
+
 ```java
 public class TestConfig implements Config {
 
@@ -24,6 +26,7 @@ public class TestConfig implements Config {
 }
 
 ```
+
 ```java
 public class MyModInitializer {
 
@@ -35,7 +38,9 @@ public class MyModInitializer {
     }
 }
 ```
+
 ---
+
 ### Extra API Utilities
 
 ΩConfig provides several utility methods for developers.
@@ -43,11 +48,12 @@ public class MyModInitializer {
 **save()** - *saves a modified configuration instance to disk*
 
 ```java
-MyModInitializer.CONFIG.value = false;
-MyModInitializer.CONFIG.save(); // writes the new value to disk
+MyModInitializer.CONFIG.value=false;
+        MyModInitializer.CONFIG.save(); // writes the new value to disk
 ```
 
 ---
+
 ### License
-ΩConfig is available under Public Domain. 
-You are encouraged to utilize the code in this repository in any way you wish.
+
+ΩConfig is available under Public Domain. You are encouraged to utilize the code in this repository in any way you wish.

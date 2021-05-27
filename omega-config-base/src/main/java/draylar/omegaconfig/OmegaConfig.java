@@ -10,8 +10,8 @@ import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtList;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.LogManager;
@@ -28,36 +28,33 @@ import java.util.*;
 
 public class OmegaConfig {
 
-    private static final Logger LOGGER = LogManager.getLogger();
-    private static final List<Config> REGISTERED_CONFIGURATIONS = new ArrayList<>();
     public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
-
     public static final Identifier CONFIG_SYNC_PACKET = new Identifier("omegaconfig", "sync");
     public static final Gson SYNC_ONLY_GSON = new GsonBuilder().addSerializationExclusionStrategy(new SyncableExclusionStrategy()).setPrettyPrinting().create();
+    private static final Logger LOGGER = LogManager.getLogger();
+    private static final List<Config> REGISTERED_CONFIGURATIONS = new ArrayList<>();
 
     static {
-        ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
-            server.execute(() -> {
-                PacketByteBuf packet = new PacketByteBuf(Unpooled.buffer());
+        ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> server.execute(() -> {
+            PacketByteBuf packet = new PacketByteBuf(Unpooled.buffer());
 
-                // list of configurations that are synced
-                CompoundTag root = new CompoundTag();
-                ListTag configurations = new ListTag();
+            // list of configurations that are synced
+            NbtCompound root = new NbtCompound();
+            NbtList configurations = new NbtList();
 
-                // Iterate over each configuration.
-                // Find values that should be synced and send the value over.
-                OmegaConfig.getRegisteredConfigurations().forEach(config -> {
-                    if(config.hasAnySyncable()) {
-                        configurations.add(config.writeSyncingTag());
-                    }
-                });
-
-                // save to packet and send to user
-                root.put("Configurations", configurations);
-                packet.writeCompoundTag(root);
-                handler.sendPacket(ServerPlayNetworking.createS2CPacket(CONFIG_SYNC_PACKET, packet));
+            // Iterate over each configuration.
+            // Find values that should be synced and send the value over.
+            OmegaConfig.getRegisteredConfigurations().forEach(config -> {
+                if (config.hasAnySyncable()) {
+                    configurations.add(config.writeSyncingTag());
+                }
             });
-        });
+
+            // save to packet and send to user
+            root.put("Configurations", configurations);
+            packet.writeNbt(root);
+            handler.sendPacket(ServerPlayNetworking.createS2CPacket(CONFIG_SYNC_PACKET, packet));
+        }));
     }
 
     public static <T extends Config> T register(Class<T> configClass) {
@@ -69,7 +66,7 @@ public class OmegaConfig {
             // We want to provide access to the config as soon as it is created, so we:
             //    1. serialize to disk if the config does not already exist
             //    2. read from disk if it does exist
-            if(!configExists(config)) {
+            if (!configExists(config)) {
                 writeConfig(configClass, config);
                 REGISTERED_CONFIGURATIONS.add(config);
             } else {
@@ -99,7 +96,7 @@ public class OmegaConfig {
         }
     }
 
-    public static  <T extends Config> void  writeConfig(Class<T> configClass, T instance) {
+    public static <T extends Config> void writeConfig(Class<T> configClass, T instance) {
         // Write the config to disk with the default values.
         String json = GSON.toJson(instance);
 
@@ -109,14 +106,14 @@ public class OmegaConfig {
         Map<String, String> keyToComments = new HashMap<>();
 
         // populate key -> comments map
-        for(Field field : configClass.getDeclaredFields()) {
+        for (Field field : configClass.getDeclaredFields()) {
             addFieldComments(field, keyToComments);
         }
 
         // get inner-class fields
         // TODO: recursively get inner classes?
-        for(Class<?> innerClass : configClass.getDeclaredClasses()) {
-            for(Field field : innerClass.getDeclaredFields()) {
+        for (Class<?> innerClass : configClass.getDeclaredClasses()) {
+            for (Field field : innerClass.getDeclaredFields()) {
                 addFieldComments(field, keyToComments);
             }
         }
@@ -154,7 +151,7 @@ public class OmegaConfig {
             Files.write(configPath, res.toString().getBytes());
         } catch (IOException ioException) {
             LOGGER.error(ioException);
-            LOGGER.info(String.format("Write error, using default values for config %s.", configClass.toString()));
+            LOGGER.info(String.format("Write error, using default values for config %s.", configClass));
         }
     }
 
@@ -164,7 +161,7 @@ public class OmegaConfig {
 
         // Find comment
         for (Annotation annotation : annotations) {
-            if(annotation instanceof Comment) {
+            if (annotation instanceof Comment) {
                 keyToComments.put(fieldName, ((Comment) annotation).value());
                 break;
             }
@@ -179,23 +176,23 @@ public class OmegaConfig {
      * "p" -> ""
      * " p" -> " "
      *
-     * @param input  input to retrieve whitespaces from
-     * @return       starting whitespaces from the given input
+     * @param input input to retrieve whitespaces from
+     * @return starting whitespaces from the given input
      */
     private static String getStartingWhitespace(String input) {
         int index = -1;
 
         char[] chars = input.toCharArray();
-        for(int i = 0; i < chars.length; i++) {
+        for (int i = 0; i < chars.length; i++) {
             char at = chars[i];
 
-            if(at != ' ') {
+            if (at != ' ') {
                 index = i;
                 break;
             }
         }
 
-        if(index != -1) {
+        if (index != -1) {
             return input.substring(0, index);
         } else {
             return "";

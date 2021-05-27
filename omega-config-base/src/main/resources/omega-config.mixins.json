@@ -4,7 +4,6 @@
   "package": "draylar.omegaconfig.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-
   ],
   "client": [
     "ClientMixin"

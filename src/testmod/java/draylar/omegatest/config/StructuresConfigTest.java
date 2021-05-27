@@ -21,6 +21,11 @@ public class StructuresConfigTest implements Config {
         return "mostructures-config-v2";
     }
 
+    @Override
+    public String getExtension() {
+        return "json5";
+    }
+
     public static class Features {
         @Comment("Airplanes & Air Balloons")
         public boolean air_features = true;
@@ -122,10 +127,5 @@ public class StructuresConfigTest implements Config {
         @Comment("Killer Bunny Castle")
         public int killer_bunny_castle_seperation = 25;
         public int killer_bunny_castle_spacing = 50;
-    }
-
-    @Override
-    public String getExtension() {
-        return "json5";
     }
 }
