@@ -5,19 +5,16 @@ import draylar.omegaconfig.api.Config;
 import draylar.omegaconfiggui.api.screen.widget.LabelWidget;
 import draylar.omegaconfiggui.api.screen.widget.TypeWidgets;
 import draylar.omegaconfiggui.api.screen.widget.WidgetSupplier;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.Drawable;
-import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.Tessellator;
+import net.minecraft.client.render.VertexFormat;
 import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.Pair;
 
 import java.lang.reflect.Field;
@@ -32,7 +29,7 @@ public class OmegaConfigScreen<T extends Config> extends Screen {
     private static final List<Class<?>> validClasses = Arrays.asList(Double.class, String.class, Boolean.class);
     private final T config;
     private final Screen parent;
-    private final Map<Field, Pair<WidgetSupplier<Object, AbstractButtonWidget>, AbstractButtonWidget>> fieldWidgets = new HashMap<>();
+    private final Map<Field, Pair<WidgetSupplier<Object, ClickableWidget>, ClickableWidget>> fieldWidgets = new HashMap<>();
 
     public OmegaConfigScreen(T config, Screen parent) {
         super(new LiteralText(""));
@@ -54,24 +51,24 @@ public class OmegaConfigScreen<T extends Config> extends Screen {
                 Class<?> unbox = TypeWidgets.unbox(field.getType());
 
                 // label
-                addChild(new LabelWidget(150, 15 + height / 6 + 20 * over, new LiteralText(field.getName())));
+                addDrawable(new LabelWidget(150, 15 + height / 6 + 20 * over, new LiteralText(field.getName())));
 
                 // get value
                 field.setAccessible(true);
                 Object value = field.get(config);
 
                 // button / interact
-                AbstractButtonWidget button;
-                WidgetSupplier<Object, AbstractButtonWidget> widgetSupplier = (WidgetSupplier<Object, AbstractButtonWidget>) TypeWidgets.get(unbox);
-                if(widgetSupplier != null) {
-                    button = widgetSupplier.create(this,250, 5 + height / 6 + 25 * over, 100, 20, new LiteralText(field.getName()), value);
+                ClickableWidget button;
+                WidgetSupplier<Object, ClickableWidget> widgetSupplier = (WidgetSupplier<Object, ClickableWidget>) TypeWidgets.get(unbox);
+                if (widgetSupplier != null) {
+                    button = widgetSupplier.create(this, 250, 5 + height / 6 + 25 * over, 100, 20, new LiteralText(field.getName()), value);
                 } else {
                     button = new TextFieldWidget(client.textRenderer, 250, 5 + height / 6 + 25 * over, 100, 20, new LiteralText(field.getName()));
                 }
 
                 fieldWidgets.put(field, new Pair<>(widgetSupplier, button));
 
-                addButton(button);
+                addSelectableChild(button);
 
                 over++;
             }
@@ -92,15 +89,17 @@ public class OmegaConfigScreen<T extends Config> extends Screen {
 
             config.save();
         });
-        addButton(save);
-        addButton(exit);
+        addSelectableChild(save);
+        addSelectableChild(exit);
     }
 
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         renderBackground(matrices);
 
-        for (AbstractButtonWidget button : this.buttons) {
+        //TODO make this work. for Drawables (children) it works in parent method
+        /*
+        for (ClickableWidget button : this.) {
             button.render(matrices, mouseX, mouseY, delta);
         }
 
@@ -109,6 +108,8 @@ public class OmegaConfigScreen<T extends Config> extends Screen {
                 ((Drawable) element).render(matrices, mouseX, mouseY, delta);
             }
         }
+
+         */
     }
 
     @Override
@@ -129,13 +130,13 @@ public class OmegaConfigScreen<T extends Config> extends Screen {
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder bufferBuilder = tessellator.getBuffer();
         this.client.getTextureManager().bindTexture(OPTIONS_BACKGROUND_TEXTURE);
-        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
-        bufferBuilder.begin(7, VertexFormats.POSITION_TEXTURE_COLOR);
-        bufferBuilder.vertex(x, height + y, 0.0D).texture(0.0F, (float)height / 32.0F + (float)vOffset).color(r, g, b, 255).next();
-        bufferBuilder.vertex(width + x, height + y, 0.0D).texture((float)width / 32.0F, (float)height / 32.0F + (float)vOffset).color(r, g, b, 255).next();
-        bufferBuilder.vertex(width + x, y, 0.0D).texture((float)width / 32.0F, (float)vOffset).color(r, g, b, 255).next();
-        bufferBuilder.vertex(x, y, 0.0D).texture(0.0F, (float)vOffset).color(r, g, b, 255).next();
+        bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE_COLOR);
+        bufferBuilder.vertex(x, height + y, 0.0D).texture(0.0F, (float) height / 32.0F + (float) vOffset).color(r, g, b, 255).next();
+        bufferBuilder.vertex(width + x, height + y, 0.0D).texture((float) width / 32.0F, (float) height / 32.0F + (float) vOffset).color(r, g, b, 255).next();
+        bufferBuilder.vertex(width + x, y, 0.0D).texture((float) width / 32.0F, (float) vOffset).color(r, g, b, 255).next();
+        bufferBuilder.vertex(x, y, 0.0D).texture(0.0F, (float) vOffset).color(r, g, b, 255).next();
         tessellator.draw();
     }
 }

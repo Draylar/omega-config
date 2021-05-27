@@ -30,6 +30,10 @@ public class TypeWidgets {
         PRIMITIVE_TO_BOXED.put(void.class, Void.class);
     }
 
+    private TypeWidgets() {
+        // NO-OP
+    }
+
     @Nullable
     public static <T> WidgetSupplier<T, ?> get(Class<T> typeClass) {
         return (WidgetSupplier<T, ?>) CLASS_WIDGETS.get(unbox(typeClass));
@@ -37,9 +41,5 @@ public class TypeWidgets {
 
     public static Class<?> unbox(Class<?> c) {
         return PRIMITIVE_TO_BOXED.getOrDefault(c, c);
-    }
-
-    private TypeWidgets() {
-        // NO-OP
     }
 }

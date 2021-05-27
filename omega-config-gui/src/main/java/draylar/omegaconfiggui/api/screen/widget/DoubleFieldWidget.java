@@ -13,14 +13,12 @@ public class DoubleFieldWidget extends BaseTextFieldWidget {
     @Override
     public void write(String string) {
         try {
-            if(string.equals(".") && !getText().contains(".")) {
-                super.write(string);
-            } else {
+            if (!string.equals(".") || getText().contains(".")) {
                 Double.parseDouble(string);
-                super.write(string);
             }
+            super.write(string);
 
-        } catch(NumberFormatException ignored) {
+        } catch (NumberFormatException ignored) {
 
         }
     }

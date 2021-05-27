@@ -19,12 +19,6 @@ public class SimpleConfigTest implements Config {
     @Comment(value = "This is an inner static class.")
     public Test test = new Test();
 
-    public static class Test {
-
-        @Comment(value = "This is the value inside the class!")
-        public boolean innerTest = false;
-    }
-
     @Override
     public String getName() {
         return "test-config";
@@ -33,5 +27,11 @@ public class SimpleConfigTest implements Config {
     @Override
     public @Nullable String getModid() {
         return "omega-config-test";
+    }
+
+    public static class Test {
+
+        @Comment(value = "This is the value inside the class!")
+        public boolean innerTest = false;
     }
 }

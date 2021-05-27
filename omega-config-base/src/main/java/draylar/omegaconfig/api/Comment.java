@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
  *
  * <p>
  * When a configuration is serialized, any field elements with the {@link Comment} annotation
- *  will be prefixed with a // comment on the previous line, with the value specified by this annotation.
+ * will be prefixed with a // comment on the previous line, with the value specified by this annotation.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)

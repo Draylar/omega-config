@@ -21,12 +21,12 @@ public class DoubleWidgetSupplier implements WidgetSupplier<Double, DoubleFieldW
         String message = widget.getText();
 
         // if it is just a . or empty, return 0
-        if(message.equals(".") || message.isEmpty()) {
+        if (message.equals(".") || message.isEmpty()) {
             return 0.0;
         }
 
         // trim potential trailing .
-        if(message.indexOf(".") == message.length()) {
+        if (message.indexOf(".") == message.length()) {
             message = message.substring(0, message.length() - 1);
         }
 

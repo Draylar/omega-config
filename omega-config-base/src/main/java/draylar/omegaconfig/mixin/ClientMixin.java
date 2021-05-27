@@ -3,13 +3,12 @@ package draylar.omegaconfig.mixin;
 import draylar.omegaconfig.OmegaConfig;
 import draylar.omegaconfig.api.Config;
 import draylar.omegaconfig.api.Syncing;
-import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.RunArgs;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtList;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -29,17 +28,17 @@ public class ClientMixin {
 
     @Inject(
             method = "<init>",
-        at = @At("RETURN"))
+            at = @At("RETURN"))
     private void onReturn(RunArgs args, CallbackInfo ci) {
-        ClientSidePacketRegistry.INSTANCE.register(OmegaConfig.CONFIG_SYNC_PACKET, (context, buffer) -> {
-            CompoundTag tag = buffer.readCompoundTag();
+        ClientPlayNetworking.registerGlobalReceiver(OmegaConfig.CONFIG_SYNC_PACKET, (client, handler, buf, responseSender) -> {
+            NbtCompound tag = buf.readNbt();
             savedClientConfig.clear();
 
-            context.getTaskQueue().execute(() -> {
-                if(tag != null && tag.contains("Configurations")) {
-                    ListTag list = tag.getList("Configurations", NbtType.COMPOUND);
+            client.execute(() -> {
+                if (tag != null && tag.contains("Configurations")) {
+                    NbtList list = tag.getList("Configurations", NbtType.COMPOUND);
                     list.forEach(compound -> {
-                        CompoundTag syncedConfiguration = (CompoundTag) compound;
+                        NbtCompound syncedConfiguration = (NbtCompound) compound;
                         String name = syncedConfiguration.getString("ConfigName");
                         String json = syncedConfiguration.getString("Serialized");
                         boolean allSync = syncedConfiguration.getBoolean("AllSync");
@@ -56,7 +55,7 @@ public class ClientMixin {
 
                                 // locate all fields that differ between the client and server, assign values from server to client (this will mutate the stored object)
                                 for (Field field : server.getClass().getDeclaredFields()) {
-                                    if(allSync || Arrays.stream(field.getAnnotations()).anyMatch(annotation -> annotation instanceof Syncing)) {
+                                    if (allSync || Arrays.stream(field.getAnnotations()).anyMatch(annotation -> annotation instanceof Syncing)) {
                                         try {
                                             field.setAccessible(true);
                                             Object serverValue = field.get(server);
@@ -79,15 +78,15 @@ public class ClientMixin {
     @Inject(
             method = "disconnect(Lnet/minecraft/client/gui/screen/Screen;)V",
             at = @At("RETURN"))
-    private void restoreConfigurations(Screen screen, CallbackInfo ci) {
-        for(Config config : savedClientConfig) {
-            for(Config potentiallySynced : OmegaConfig.getRegisteredConfigurations()) {
-                if(config.getName().equals(potentiallySynced.getName())) {
+    private void restoreConfigurations(CallbackInfo ci) {
+        for (Config config : savedClientConfig) {
+            for (Config potentiallySynced : OmegaConfig.getRegisteredConfigurations()) {
+                if (config.getName().equals(potentiallySynced.getName())) {
                     boolean allConfigSyncs = Arrays.stream(config.getClass().getAnnotations()).anyMatch(annotation -> annotation instanceof Syncing);
 
                     // mutate object in registered configurations
                     for (Field field : config.getClass().getDeclaredFields()) {
-                        if(allConfigSyncs || Arrays.stream(field.getAnnotations()).anyMatch(annotation -> annotation instanceof Syncing)) {
+                        if (allConfigSyncs || Arrays.stream(field.getAnnotations()).anyMatch(annotation -> annotation instanceof Syncing)) {
                             try {
                                 field.setAccessible(true);
                                 Object preSyncValue = field.get(config);
