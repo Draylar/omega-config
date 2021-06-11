@@ -1,11 +1,12 @@
 {
   "schemaVersion": 1,
   "id": "omega-config",
-  "version": "${version}",
+  "version": "1.0.7",
   "name": "OmegaConfig",
   "description": "The last config solution you will ever use.",
   "authors": [
-    "Draylar"
+    "Draylar",
+    "Frqnny"
   ],
   "contact": {},
   "license": "MIT",

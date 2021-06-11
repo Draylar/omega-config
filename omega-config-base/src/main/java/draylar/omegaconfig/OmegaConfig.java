@@ -67,7 +67,7 @@ public class OmegaConfig {
             //    1. serialize to disk if the config does not already exist
             //    2. read from disk if it does exist
             if (!configExists(config)) {
-                writeConfig(configClass, config);
+                config.save();
                 REGISTERED_CONFIGURATIONS.add(config);
             } else {
                 try {
@@ -79,7 +79,7 @@ public class OmegaConfig {
                     T object = GSON.fromJson(res.toString(), configClass);
 
                     // re-write the config to add new values
-                    writeConfig(configClass, object);
+                    object.save();
                     REGISTERED_CONFIGURATIONS.add(object);
                     return object;
                 } catch (Exception e) {
