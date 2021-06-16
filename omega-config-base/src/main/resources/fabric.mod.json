@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "omega-config",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "name": "OmegaConfig",
   "description": "The last config solution you will ever use.",
   "authors": [

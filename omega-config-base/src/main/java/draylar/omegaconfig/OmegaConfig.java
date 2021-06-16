@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import draylar.omegaconfig.api.Comment;
 import draylar.omegaconfig.api.Config;
-import draylar.omegaconfig.exception.NoValidConstructorException;
 import draylar.omegaconfig.gson.SyncableExclusionStrategy;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
@@ -92,7 +91,7 @@ public class OmegaConfig {
             return config;
         } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException exception) {
             exception.printStackTrace();
-            throw new NoValidConstructorException();
+            throw new RuntimeException("No valid constructor found for: " + configClass.getName());
         }
     }
 
