@@ -5,7 +5,6 @@ import java.nio.charset.StandardCharsets
 buildscript {
     repositories {
         mavenLocal()
-        jcenter()
         google()
     }
 
