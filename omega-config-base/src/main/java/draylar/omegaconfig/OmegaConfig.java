@@ -161,10 +161,6 @@ public class OmegaConfig {
     private static List<Class<?>> flatten(Class<?>[] array) {
         List<Class<?>> list = new ArrayList<>();
 
-        if (array.length <= 0) {
-            return list;
-        }
-
         for (Class<?> clazz : array) {
             populateRecursively(list, clazz);
         }
