@@ -188,7 +188,9 @@ afterEvaluate {
 
 sourceSets {
     testmod {
+        compileClasspath += main.output
         compileClasspath += main.compileClasspath
+        runtimeClasspath += main.output
         runtimeClasspath += main.runtimeClasspath
     }
     test {
@@ -238,6 +240,14 @@ publishing {
             }
         }
     }
+}
+//todo: remove before pr'ing
+import net.fabricmc.loom.task.RunClientTask
+
+task runTestMod(type: RunClientTask) {
+    classpath = configurations.runtimeClasspath
+    classpath sourceSets.main.output
+    classpath sourceSets.testmod.output
 }
 
 tasks.publish.dependsOn build //stupid fix for maven/loom not publishing the main artifact
