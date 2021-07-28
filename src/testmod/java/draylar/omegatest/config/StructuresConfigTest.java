@@ -13,16 +13,16 @@ public class StructuresConfigTest implements Config {
 
     @Comment("""
              Welcome to Mo'Structures Config!
-              //
-              // Here, you can turn off structures, change their chance, and also change their salt.
-              //
-              // To turn off a structure, simply go to the corresponding entry and set `activated` to false.
-              //
-              // Mo' Structures uses the vanilla structure spawning system. That is-
-              // - Seperation is the minimum chunks between structures
-              // - Spacing is the average chunks between structures
-              //
-              // Salt is a special field that gives structures unique spawning positions. DO NOT TOUCH IT, ONLY ADVANCED TROUBLESHOOTING!
+            
+             Here, you can turn off structures, change their chance, and also change their salt.
+            
+             To turn off a structure, simply go to the corresponding entry and set `activated` to false.
+            
+             Mo' Structures uses the vanilla structure spawning system. That is-
+             - Seperation is the minimum chunks between structures
+             - Spacing is the average chunks between structures
+            
+             Salt is a special field that gives structures unique spawning positions. DO NOT TOUCH IT, ONLY ADVANCED TROUBLESHOOTING!
                         
             """)
     public final Map<String, StructureConfigEntry> structureConfigEntries = new  HashMap<>(17);
