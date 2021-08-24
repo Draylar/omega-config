@@ -120,14 +120,18 @@ public class OmegaConfig {
         // Find areas we should insert comments into...
         for (int i = 0; i < lines.size(); i++) {
             String at = lines.get(i);
+            String startingWhitespace = getStartingWhitespace(at);
 
-            // Check if we should insert comment
             for (Map.Entry<String, String> entry : keyToComments.entrySet()) {
-                String key = entry.getKey();
                 String comment = entry.getValue();
-
-                if (at.trim().startsWith(String.format("\"%s\"", key))) {
-                    insertions.put(i + insertions.size(), String.format("%s//%s", getStartingWhitespace(at), comment));
+                // Check if we should insert comment
+                if (at.trim().startsWith(String.format("\"%s\"", entry.getKey()))) {
+                    if (comment.contains("\n")) {
+                        comment = startingWhitespace + "//" + String.join(String.format("\n%s//", startingWhitespace), comment.split("\n"));
+                    } else {
+                        comment = String.format("%s//%s", startingWhitespace, comment);
+                    }
+                    insertions.put(i + insertions.size(), comment);
                     break;
                 }
             }
