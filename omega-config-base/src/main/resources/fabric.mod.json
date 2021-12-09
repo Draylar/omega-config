@@ -8,7 +8,11 @@
     "Draylar",
     "Frqnny"
   ],
-  "contact": {},
+  "contact": {
+      "homepage": "https://github.com/Draylar/omega-config",
+      "sources": "https://github.com/Draylar/omega-config",
+      "issues": "https://github.com/Draylar/omega-config/issues"
+    },
   "license": "MIT",
   "environment": "*",
   "mixins": [
@@ -18,5 +22,10 @@
     "fabricloader": "*",
     "fabric": "*",
     "minecraft": "*"
-  }
+  },
+   "custom": {
+       "modmenu": {
+           "badges": [ "library" ]
+        }
+    }
 }
