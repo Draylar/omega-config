@@ -23,7 +23,12 @@ import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class OmegaConfig {
 
@@ -109,10 +114,9 @@ public class OmegaConfig {
             addFieldComments(field, keyToComments);
         }
 
-        // get inner-class fields
-        // TODO: recursively get inner classes?
-        for (Class<?> innerClass : configClass.getDeclaredClasses()) {
-            for (Field field : innerClass.getDeclaredFields()) {
+        // "flattens" all the inner classes of the Config class into a single list
+        for (Class<?> clazz : flatten(configClass.getDeclaredClasses())) {
+            for (Field field : clazz.getDeclaredFields()) {
                 addFieldComments(field, keyToComments);
             }
         }
@@ -155,6 +159,28 @@ public class OmegaConfig {
         } catch (IOException ioException) {
             LOGGER.error(ioException);
             LOGGER.info(String.format("Write error, using default values for config %s.", configClass));
+        }
+    }
+
+    private static List<Class<?>> flatten(Class<?>[] array) {
+        List<Class<?>> list = new ArrayList<>();
+
+        for (Class<?> clazz : array) {
+            populateRecursively(list, clazz);
+        }
+
+        return list;
+    }
+
+    private static void populateRecursively(List<Class<?>> list, Class<?> aClass) {
+        list.add(aClass);
+
+        Class<?>[] classes = aClass.getDeclaredClasses();
+
+        if (classes.length != 0) {
+            for (Class<?> clazz : classes) {
+                populateRecursively(list, clazz);
+            }
         }
     }
 
