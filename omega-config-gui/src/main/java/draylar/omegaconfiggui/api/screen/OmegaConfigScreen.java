@@ -114,7 +114,7 @@ public class OmegaConfigScreen<T extends Config> extends Screen {
 
     @Override
     public void onClose() {
-        client.openScreen(parent);
+        client.setScreen(parent);
     }
 
     @Override
