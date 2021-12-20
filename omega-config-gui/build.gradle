@@ -1,10 +1,23 @@
 repositories {
-    maven { url "https://maven.shedaniel.me/" }
+    maven {
+        name = "Shedaniel's Maven"
+        url = "https://maven.shedaniel.me/"
+    }
+
+    maven {
+        name = "TerraformersMC"
+        url = "https://maven.terraformersmc.com/releases/"
+    }
 }
 
 dependencies {
     implementation project(":omega-config-base")
 
+    // Mod Menu
+    modRuntimeOnly "com.terraformersmc:modmenu:${project.modmenu_version}"
+    modCompileOnly "com.terraformersmc:modmenu:${project.modmenu_version}"
+
+    // Cloth Config Lite
     include "me.shedaniel.cloth:cloth-config-lite-fabric:2.0.6"
     modApi ("me.shedaniel.cloth:cloth-config-lite-fabric:2.0.6") {
         exclude group: "net.fabricmc.fabric-api"

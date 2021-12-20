@@ -40,11 +40,6 @@ allprojects {
             name = "FabricMC"
             url = "https://maven.fabricmc.net"
         }
-
-        maven {
-            name = "TerraformersMC"
-            url = "https://maven.terraformersmc.com/releases/"
-        }
     }
 
     dependencies {
@@ -52,8 +47,6 @@ allprojects {
         mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
         modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
         modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-        modRuntimeOnly "com.terraformersmc:modmenu:${project.modmenu_version}"
-        modCompileOnly "com.terraformersmc:modmenu:${project.modmenu_version}"
     }
 
     processResources {
