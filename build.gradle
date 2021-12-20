@@ -33,7 +33,7 @@ subprojects {
 allprojects {
     apply plugin: "fabric-loom"
     sourceCompatibility = targetCompatibility = JavaVersion.VERSION_17
-    version = project.mod_version
+    version = project.mod_version + "-" + project.minecraft_version
 
     repositories {
         maven {
