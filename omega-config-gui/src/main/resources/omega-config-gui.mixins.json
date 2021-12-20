@@ -2,11 +2,11 @@
   "required": true,
   "minVersion": "0.8",
   "package": "draylar.omegaconfiggui.mixin",
-  "compatibilityLevel": "JAVA_16",
-  "mixins": [
-    "ClickableWidgetInvoker"
-  ],
+  "compatibilityLevel": "JAVA_17",
+  "plugin": "draylar.omegaconfiggui.mixin.OmegaConfigMixinPlugin",
   "client": [
+    "modmenu.ModMenuAccessor",
+    "ModMenuMixin"
   ],
   "injectors": {
     "defaultRequire": 1

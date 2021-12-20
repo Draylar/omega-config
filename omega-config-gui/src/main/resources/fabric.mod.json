@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "omega-config-gui",
   "version": "${version}",
-  "name": "OmegaConfigGui",
+  "name": "Omega Config GUI",
   "description": "GUI support for Omega Config.",
   "authors": [
     "Draylar"
@@ -21,6 +21,9 @@
     "fabricloader": "*",
     "fabric": "*",
     "minecraft": "*"
+  },
+  "recommends": {
+    "modmenu": "3.0.1"
   },
    "custom": {
        "modmenu": {

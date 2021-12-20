@@ -35,7 +35,7 @@ public class OmegaConfig {
     public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     public static final Identifier CONFIG_SYNC_PACKET = new Identifier("omegaconfig", "sync");
     public static final Gson SYNC_ONLY_GSON = new GsonBuilder().addSerializationExclusionStrategy(new SyncableExclusionStrategy()).setPrettyPrinting().create();
-    private static final Logger LOGGER = LogManager.getLogger();
+    public static final Logger LOGGER = LogManager.getLogger();
     private static final List<Config> REGISTERED_CONFIGURATIONS = new ArrayList<>();
 
     static {
@@ -162,7 +162,7 @@ public class OmegaConfig {
         }
     }
 
-    private static List<Class<?>> flatten(Class<?>[] array) {
+    public static List<Class<?>> flatten(Class<?>[] array) {
         List<Class<?>> list = new ArrayList<>();
 
         for (Class<?> clazz : array) {
