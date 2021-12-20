@@ -1,18 +1,3 @@
-import java.nio.charset.StandardCharsets
-
-// this build.gradle is tweaked from CCA: https://github.com/OnyxStudios/Cardinal-Components-API/blob/master/build.gradle
-
-buildscript {
-    repositories {
-        mavenLocal()
-        google()
-    }
-
-    dependencies {
-        classpath 'com.guardsquare:proguard-gradle:7.1.0-beta4'
-    }
-}
-
 plugins {
     id "fabric-loom" version "0.10-SNAPSHOT"
     id "maven-publish"
@@ -25,119 +10,30 @@ archivesBaseName = "omega-config"
 subprojects {
     apply plugin: 'fabric-loom'
     apply plugin: 'maven-publish'
-    apply plugin: 'java-library'
 
     archivesBaseName = project.name
     group = "draylar.${project.group}"
 
-    // import utility functions
-    apply from: "https://raw.githubusercontent.com/NerdHubMC/Gradle-Scripts/master/scripts/utilities.gradle"
-
-    repositories {
-        mavenCentral()
-    }
-
-    compileJava {
-        options.encoding = StandardCharsets.UTF_8.name()
-    }
-
-    if (JavaVersion.current().isJava8Compatible()) {
-        allprojects {
-            tasks.withType(Javadoc) {
-                options.addStringOption("Xdoclint:none", "-quiet")
-            }
-        }
-    }
-
-    jar {
-        from "LICENSE.md"
-        from "LICENSE"
-        manifest.mainAttributes(
-                "Implementation-Title": project.archivesBaseName,
-                "Implementation-Version": mod_version,
-                "Maven-Artifact": "${project.group}:${project.name}:${mod_version}".toLowerCase(Locale.ROOT),
-                "Built-On-Minecraft": "${project.minecraft_version}",
-                "Built-On-Java": "${System.getProperty("java.vm.version")} (${System.getProperty("java.vm.vendor")})"
-        )
-    }
-
-    task sourcesJar(type: Jar, dependsOn: classes) {
-        from sourceSets.main.allSource
-        classifier = "sources"
-    }
-
-    task javadocJar(type: Jar, dependsOn: javadoc) {
-        from javadoc.destinationDir
-        classifier = "javadoc"
-    }
-    tasks.build.dependsOn javadocJar
-
+    // Only publish for submodules (not the root project)  - add standard jar, + sources & development jar
     publishing {
         publications {
             mavenJava(MavenPublication) {
-                artifact(remapJar) {
-                    builtBy remapJar
-                }
-
-                artifact(sourcesJar) {
-                    builtBy remapSourcesJar
-                }
-
-                artifact(file("${project.buildDir}/libs/${archivesBaseName}-${project.mod_version}-min.jar")) {
-                    builtBy(remapJar)
-                    classifier = 'min'
-                }
-
-                pom.withXml {
-                    def depsNode = asNode().appendNode("dependencies")
-                    subprojects.each {
-                        def depNode = depsNode.appendNode("dependency")
-                        depNode.appendNode("groupId", it.group)
-                        depNode.appendNode("artifactId", it.name)
-                        depNode.appendNode("version", it.version)
-                        depNode.appendNode("scope", "compile")
-                    }
-                }
+                from components.java
             }
         }
     }
 
-    tasks.publish.dependsOn build //stupid fix for maven/loom not publishing the main artifact
-
-    task('proguard', type: proguard.gradle.ProGuardTask) {
-        configuration './proguard.conf'
-        verbose
-        injars project.buildDir.toString() + '/libs/' + archivesBaseName + "-" + project.mod_version + ".jar"
-        outjars project.buildDir.toString() + '/libs/' + archivesBaseName + "-" + project.mod_version + "-min.jar"
-        printmapping 'out.map'
-        keepparameternames
-        renamesourcefileattribute 'SourceFile'
-        keepattributes 'Signature,Exceptions,InnerClasses,PermittedSubclasses,EnclosingMethod,Deprecated,SourceFile,LineNumberTable'
-        keepattributes '*Annotation*'
-
-        keep 'public class * { \
-        public protected *; \
-    }'
-        keepclassmembernames 'class * { \
-        java.lang.Class class$(java.lang.String); \
-        java.lang.Class class$(java.lang.String, boolean); \
-    }'
-
-        keepclassmembers 'class draylar.omegaconfig.mixin.* {\
-        <fields>;\
-        <init>();\
-        <methods>;\
-    }'
+    // Add sources & javadoc artifacts
+    java {
+        withSourcesJar()
+        withJavadocJar()
     }
-
-    remapJar.finalizedBy proguard
 }
 
 allprojects {
     apply plugin: "fabric-loom"
-
-    sourceCompatibility = targetCompatibility = JavaVersion.VERSION_16
-    version = System.getenv("TRAVIS_TAG") ?: project.mod_version
+    sourceCompatibility = targetCompatibility = JavaVersion.VERSION_17
+    version = project.mod_version
 
     repositories {
         maven {
@@ -145,45 +41,45 @@ allprojects {
             url = "https://maven.fabricmc.net"
         }
 
-        maven { url = "https://maven.terraformersmc.com/releases/" }
+        maven {
+            name = "TerraformersMC"
+            url = "https://maven.terraformersmc.com/releases/"
+        }
     }
 
     dependencies {
-        //to change the versions see the gradle.properties file
         minecraft "com.mojang:minecraft:${project.minecraft_version}"
         mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
         modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
         modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-
-        modRuntimeOnly "com.terraformersmc:modmenu:${project.modmenu_version}"
-        modCompileOnly "com.terraformersmc:modmenu:${project.modmenu_version}"
     }
 
-}
-
-jar {
-    from(rootProject.file("LICENSE.md")) {
-        rename { "LICENSE_${project.archivesBaseName.replace('-', '_')}" }
-    }
-}
-
-afterEvaluate {
     processResources {
-        // this will ensure that this task is redone when there"s a change
-        inputs.property "version", mod_version
+        inputs.property "version", project.version
 
-        // replace stuff in fabric.mod.json, nothing else
-        from(sourceSets.main.resources.srcDirs) {
-            include "fabric.mod.json"
-
-            // add mod metadata
-            expand "version": mod_version
+        filesMatching("fabric.mod.json") {
+            expand "version": project.version
         }
+    }
 
-        // copy everything else, that"s not the fabric.mod.json
-        from(sourceSets.main.resources.srcDirs) {
-            exclude "fabric.mod.json"
+    tasks.withType(JavaCompile) {
+        javadoc.options.addStringOption('Xdoclint:none', '-quiet')
+    }
+
+    jar {
+        from(rootProject.file("LICENSE")) {
+            rename { "LICENSE_${project.archivesBaseName.replace('-', '_')}" }
         }
+    }
+}
+
+// Main project depends on the base & gui module for testing
+dependencies {
+    implementation project(path: ":omega-config-base", configuration: "namedElements")
+    implementation project(path: ":omega-config-gui", configuration: "namedElements")
+
+    afterEvaluate {
+        testmodImplementation sourceSets.main.output
     }
 }
 
@@ -192,51 +88,9 @@ sourceSets {
         compileClasspath += main.compileClasspath
         runtimeClasspath += main.runtimeClasspath
     }
+
     test {
         compileClasspath += main.compileClasspath
         runtimeClasspath += main.runtimeClasspath
     }
 }
-
-task licenseFormatAll
-subprojects { p -> licenseFormatAll.dependsOn("${p.path}:licenseFormat") }
-subprojects.each { remapJar.dependsOn("${it.path}:remapJar") }
-
-repositories {
-    maven {
-        name = "JitPack"
-        url = "https://jitpack.io"
-    }
-}
-
-dependencies {
-    implementation project(path: ":omega-config-base", configuration: "namedElements")
-    implementation project(path: ":omega-config-gui", configuration: "namedElements")
-    modRuntimeOnly "com.terraformersmc:modmenu:${project.modmenu_version}"
-    modCompileOnly "com.terraformersmc:modmenu:${project.modmenu_version}"
-
-    afterEvaluate {
-        testmodImplementation sourceSets.main.output
-    }
-}
-
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            from components.java
-
-            pom.withXml {
-                def depsNode = asNode().appendNode("dependencies")
-                subprojects.each {
-                    def depNode = depsNode.appendNode("dependency")
-                    depNode.appendNode("groupId", it.group)
-                    depNode.appendNode("artifactId", it.name)
-                    depNode.appendNode("version", it.version)
-                    depNode.appendNode("scope", "compile")
-                }
-            }
-        }
-    }
-}
-
-tasks.publish.dependsOn build //stupid fix for maven/loom not publishing the main artifact

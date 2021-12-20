@@ -4,8 +4,7 @@
   "package": "draylar.omegaconfiggui.mixin",
   "compatibilityLevel": "JAVA_16",
   "mixins": [
-    "ClickableWidgetInvoker",
-    "ModMenuAccessor"
+    "ClickableWidgetInvoker"
   ],
   "client": [
   ],
