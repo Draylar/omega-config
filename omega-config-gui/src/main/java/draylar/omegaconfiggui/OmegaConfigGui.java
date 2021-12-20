@@ -30,12 +30,17 @@ public class OmegaConfigGui {
      */
     public static <T extends Config> void registerConfigScreen(T config) {
         if(FabricLoader.getInstance().isModLoaded("modmenu")) {
-            OmegaScreenFactory<Screen> factory = OmegaConfigGui.getConfigScreenFactory(config);
+            // Ensure the config has a valid modid.
+            if(config.getModid() != null) {
+                OmegaScreenFactory<Screen> factory = OmegaConfigGui.getConfigScreenFactory(config);
 
-            if(modMenuInitialized) {
-                OmegaModMenu.injectScreen(config, factory);
+                if(modMenuInitialized) {
+                    OmegaModMenu.injectScreen(config, factory);
+                } else {
+                    REGISTERED_CONFIGURATIONS.put(config, factory);
+                }
             } else {
-                REGISTERED_CONFIGURATIONS.put(config, factory);
+                OmegaConfig.LOGGER.warn(String.format("Skipping config screen registration for '%s' - you must implement getModid() in your config class!", config.getName()));
             }
         }
     }
