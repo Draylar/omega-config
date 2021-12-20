@@ -8,6 +8,11 @@
     "Draylar",
     "Frqnny"
   ],
+  "entrypoints": {
+    "main": [
+      "draylar.omegaconfig.OmegaConfig"
+    ]
+  },
   "contact": {
       "homepage": "https://github.com/Draylar/omega-config",
       "sources": "https://github.com/Draylar/omega-config",

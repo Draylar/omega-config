@@ -6,6 +6,7 @@ import draylar.omegaconfig.api.Comment;
 import draylar.omegaconfig.api.Config;
 import draylar.omegaconfig.gson.SyncableExclusionStrategy;
 import io.netty.buffer.Unpooled;
+import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
@@ -30,7 +31,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-public class OmegaConfig {
+public class OmegaConfig implements ModInitializer {
 
     public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     public static final Identifier CONFIG_SYNC_PACKET = new Identifier("omegaconfig", "sync");
@@ -38,7 +39,8 @@ public class OmegaConfig {
     public static final Logger LOGGER = LogManager.getLogger();
     private static final List<Config> REGISTERED_CONFIGURATIONS = new ArrayList<>();
 
-    static {
+    @Override
+    public void onInitialize() {
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> server.execute(() -> {
             PacketByteBuf packet = new PacketByteBuf(Unpooled.buffer());
 

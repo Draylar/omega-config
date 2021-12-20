@@ -14,8 +14,12 @@ dependencies {
     implementation project(":omega-config-base")
 
     // Mod Menu
-    modRuntimeOnly "com.terraformersmc:modmenu:${project.modmenu_version}"
-    modCompileOnly "com.terraformersmc:modmenu:${project.modmenu_version}"
+    modCompileOnly ("com.terraformersmc:modmenu:${project.modmenu_version}") {
+        transitive(false)
+    }
+    modRuntime ("com.terraformersmc:modmenu:${project.modmenu_version}") {
+        transitive(false)
+    }
 
     // Cloth Config Lite
     include "me.shedaniel.cloth:cloth-config-lite-fabric:2.0.6"
