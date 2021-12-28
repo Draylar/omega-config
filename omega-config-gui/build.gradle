@@ -17,7 +17,7 @@ dependencies {
     modCompileOnly ("com.terraformersmc:modmenu:${project.modmenu_version}") {
         transitive(false)
     }
-    modRuntime ("com.terraformersmc:modmenu:${project.modmenu_version}") {
+    modRuntimeOnly ("com.terraformersmc:modmenu:${project.modmenu_version}") {
         transitive(false)
     }
 
