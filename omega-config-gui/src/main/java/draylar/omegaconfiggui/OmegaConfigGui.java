@@ -10,6 +10,7 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.LiteralText;
+import net.minecraft.text.TranslatableText;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -55,7 +56,7 @@ public class OmegaConfigGui {
         return parent -> {
             try {
                 Config defaultConfig = config.getClass().getDeclaredConstructor().newInstance();
-                ConfigScreen screen = ConfigScreen.create(new LiteralText(config.getName()), parent);
+                ConfigScreen screen = ConfigScreen.create(new TranslatableText(String.format("config.%s.%s", config.getModid(), config.getName())), parent);
 
                 // Fields
                 for (Field field : config.getClass().getDeclaredFields()) {
