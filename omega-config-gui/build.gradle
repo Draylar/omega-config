@@ -20,10 +20,4 @@ dependencies {
     modRuntimeOnly ("com.terraformersmc:modmenu:${project.modmenu_version}") {
         transitive(false)
     }
-
-    // Cloth Config Lite
-    include "me.shedaniel.cloth:cloth-config-lite-fabric:2.0.6"
-    modApi ("me.shedaniel.cloth:cloth-config-lite-fabric:2.0.6") {
-        exclude group: "net.fabricmc.fabric-api"
-    }
 }
