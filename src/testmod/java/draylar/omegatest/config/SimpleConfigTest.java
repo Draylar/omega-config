@@ -16,8 +16,11 @@ public class SimpleConfigTest implements Config {
 
     public String stringTest = "Hello, world!";
 
-    @Comment(value = "This is an inner static class.")
-    public Test test = new Test();
+    @Comment(value = "This is the first inner class test config.")
+    public FirstTest firstTest = new FirstTest();
+
+    @Comment(value = "This is the second inner class test config.")
+    public SecondTest secondTest = new SecondTest();
 
     @Override
     public String getName() {
@@ -29,9 +32,22 @@ public class SimpleConfigTest implements Config {
         return "omega-config-test";
     }
 
-    public static class Test {
+
+    public static class FirstTest {
 
         @Comment(value = "This is the value inside the class!")
         public boolean innerTest = false;
+
+        @Comment(value = "Very neat indeed.")
+        public String neatString = "neat";
+    }
+
+    public static class SecondTest {
+
+        @Comment(value = "I'm very happy :)")
+        public double happinessLevel = 83.7D;
+
+        @Comment(value = "Bye!")
+        public boolean w = false;
     }
 }

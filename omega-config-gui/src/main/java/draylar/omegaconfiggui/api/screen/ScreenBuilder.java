@@ -4,12 +4,10 @@ import draylar.omegaconfig.api.Config;
 import draylar.omegaconfiggui.impl.ConfigScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 
@@ -117,7 +115,8 @@ public final class ScreenBuilder {
      * @param instance an instance of a possible nested class from your config
      * @return self
      */
-    public ScreenBuilder allFromClass(Object instance) {
+    public ScreenBuilder allFromClass(@NonNull Object instance) {
+        Objects.requireNonNull(instance);
         List<ScreenEntry> entries = new ArrayList<>();
         for (var f : instance.getClass().getFields()) {
             entries.add(field(f.getName(), instance.getClass(), this.parentConfig, instance));

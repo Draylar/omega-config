@@ -19,6 +19,6 @@ public class OmegaTestMain implements ModInitializer {
     @Override
     public void onInitialize() {
         System.out.printf("Config value: %s%n", CONFIG.v);
-        System.out.printf("Inner class value: %s%n", CONFIG.test.innerTest);
+        System.out.printf("Inner class value: %s%n", CONFIG.secondTest.happinessLevel);
     }
 }

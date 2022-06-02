@@ -9,7 +9,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -59,7 +59,7 @@ public class OmegaConfigGui {
         return parent -> ScreenBuilder
                 .create(
                         config,
-                        new TranslatableText(String.format("config.%s.%s", config.getModid(), config.getName())),
+                        Text.translatable(String.format("config.%s.%s", config.getModid(), config.getName())),
                         parent
                 )
                 .allOuter()

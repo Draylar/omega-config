@@ -22,10 +22,8 @@ import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexFormat;
 import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Matrix4f;
@@ -88,11 +86,11 @@ public class ConfigScreen extends Screen {
     }
 
     private static Text toText(Enum<?> e) {
-        return new LiteralText(e.toString());
+        return Text.of(e.toString());
     }
 
     private static Text toText(Boolean b) {
-        return new TranslatableText("omegaconfig." + b.toString());
+        return Text.translatable("omegaconfig." + b.toString());
     }
 
     private <T> boolean add(Text text, T value, @Nullable Supplier<T> defaultValue, Consumer<T> savingConsumer, int y) {
@@ -165,8 +163,8 @@ public class ConfigScreen extends Screen {
         }
 
         ((List<Element>) children()).addAll(options);
-        addDrawableChild(new ClothConfigScreenButtons(this, width / 2 - buttonWidths - 3, height - 22, buttonWidths, 20, LiteralText.EMPTY, true));
-        addDrawableChild(new ClothConfigScreenButtons(this, width / 2 + 3, height - 22, buttonWidths, 20, LiteralText.EMPTY, false));
+        addDrawableChild(new ClothConfigScreenButtons(this, width / 2 - buttonWidths - 3, height - 22, buttonWidths, 20, Text.empty(), true));
+        addDrawableChild(new ClothConfigScreenButtons(this, width / 2 + 3, height - 22, buttonWidths, 20, Text.empty(), false));
     }
 
     @Override
@@ -307,12 +305,12 @@ public class ConfigScreen extends Screen {
     }
 
     @Override
-    public void onClose() {
+    public void close() {
         if (isEdited()) {
-            client.setScreen(new ConfirmScreen(this::acceptConfirm, new TranslatableText("omegaconfig.quit_config"),
-                    new TranslatableText("omegaconfig.quit_config_sure"),
-                    new TranslatableText("omegaconfig.quit_discard"),
-                    new TranslatableText("gui.cancel")));
+            client.setScreen(new ConfirmScreen(this::acceptConfirm, Text.translatable("omegaconfig.quit_config"),
+                    Text.translatable("omegaconfig.quit_config_sure"),
+                    Text.translatable("omegaconfig.quit_discard"),
+                    Text.translatable("gui.cancel")));
         } else {
             client.setScreen(parent);
         }
@@ -363,8 +361,8 @@ public class ConfigScreen extends Screen {
         }
     }
 
-    static class ClothEditBox extends TextFieldWidget {
-        public ClothEditBox(TextRenderer font, int i, int j, int k, int l, Text text) {
+    static class EditBox extends TextFieldWidget {
+        public EditBox(TextRenderer font, int i, int j, int k, int l, Text text) {
             super(font, i, j, k, l, text);
         }
 
@@ -372,7 +370,7 @@ public class ConfigScreen extends Screen {
         public void setTextFieldFocused(boolean f) {
             for (Element child : MinecraftClient.getInstance().currentScreen.children()) {
                 if (child instanceof TextFieldOption<?> option) {
-                    ClothEditBox box = option.widget;
+                    EditBox box = option.widget;
                     box.setFocused(box == this);
                 }
             }
@@ -390,14 +388,16 @@ public class ConfigScreen extends Screen {
             this.cancel = cancel;
         }
 
+
+
         @Override
         public void render(MatrixStack poseStack, int i, int j, float f) {
             if (cancel) {
-                setMessage(new TranslatableText(screen.isEdited() ? "omegaconfig.cancel_discard" : "gui.cancel"));
+                setMessage(Text.translatable(screen.isEdited() ? "omegaconfig.cancel_discard" : "gui.cancel"));
             } else {
                 boolean hasErrors = screen.hasErrors();
                 active = screen.isEdited() && !hasErrors;
-                setMessage(new TranslatableText(hasErrors ? "omegaconfig.error" : "omegaconfig.save"));
+                setMessage(Text.translatable(hasErrors ? "omegaconfig.error" : "omegaconfig.save"));
             }
             super.render(poseStack, i, j, f);
         }
@@ -405,7 +405,7 @@ public class ConfigScreen extends Screen {
         @Override
         public void onPress() {
             if (cancel) {
-                screen.onClose();
+                screen.close();
             } else {
                 screen.save();
             }
@@ -417,14 +417,14 @@ public class ConfigScreen extends Screen {
         }
     }
 
-    static class TextFieldOption<T> extends BaseOption<T, ClothEditBox> {
+    static class TextFieldOption<T> extends BaseOption<T, EditBox> {
         private final Function<T, String> toString;
         private final Function<String, T> fromString;
 
         public TextFieldOption(Function<T, String> toString, Function<String, T> fromString) {
             this.toString = toString;
             this.fromString = fromString;
-            this.widget = addChild(new ClothEditBox(MinecraftClient.getInstance().textRenderer, 0, 0, 98, 18, null));
+            this.widget = addChild(new EditBox(MinecraftClient.getInstance().textRenderer, 0, 0, 98, 18, null));
         }
 
         @Override
@@ -457,7 +457,7 @@ public class ConfigScreen extends Screen {
         public ToggleOption(List<T> options, Function<T, Text> toText) {
             this.options = options;
             this.toText = toText;
-            this.widget = addChild(new ButtonWidget(0, 0, 100, 20, LiteralText.EMPTY, this::switchNext));
+            this.widget = addChild(new ButtonWidget(0, 0, 100, 20, Text.empty(), this::switchNext));
         }
 
         @Override
@@ -481,7 +481,7 @@ public class ConfigScreen extends Screen {
         public boolean hasErrors;
         public final List<? extends Element> children = new ArrayList<>();
 
-        private final ButtonWidget resetButton = addChild(new ButtonWidget(0, 0, 46, 20, new LiteralText("Reset"), this::onResetPressed));
+        private final ButtonWidget resetButton = addChild(new ButtonWidget(0, 0, 46, 20, Text.of("Reset"), this::onResetPressed));
 
         public W widget;
         int y;
@@ -492,7 +492,7 @@ public class ConfigScreen extends Screen {
         }
 
         public void render(MinecraftClient minecraft, TextRenderer font, int x, int y, int width, int height, MatrixStack matrices, int mouseX, int mouseY, float delta) {
-            MutableText text = new LiteralText(this.text.getString());
+            MutableText text = Text.of(this.text.getString()).copy();
             boolean edited = isEdited() || hasErrors;
             if (edited) {
                 text.formatted(Formatting.ITALIC);

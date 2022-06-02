@@ -5,7 +5,7 @@ import draylar.omegaconfiggui.api.screen.ScreenBuilder;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
 
 public class OmegaTestClient implements ClientModInitializer {
 
@@ -14,25 +14,28 @@ public class OmegaTestClient implements ClientModInitializer {
         OmegaConfigGui.registerConfigScreen(OmegaTestMain.CONFIG, parent -> {
             var builder = ScreenBuilder.create(
                     OmegaTestMain.CONFIG,
-                    new LiteralText(OmegaTestMain.CONFIG.getName()),
+                    Text.of(OmegaTestMain.CONFIG.getName()),
                     parent
             );
 
-            builder.newBuilderWithSelfParent(new LiteralText("Nested"))
-                    .allFromClass(OmegaTestMain.CONFIG.test);
+            builder.newBuilderWithSelfParent(Text.of("Test #1"))
+                    .allFromClass(OmegaTestMain.CONFIG.firstTest);
+            builder.newBuilderWithSelfParent(Text.of("Test #2"))
+                    .allFromClass(OmegaTestMain.CONFIG.secondTest);
             builder.allOuter();
 
             return builder.toScreen();
         });
 
+        // Comment the previous code to test this
         OmegaConfigGui.registerConfigScreen(OmegaTestMain.COMMENTED_NESTED_CLASS, parent -> {
             var builder = ScreenBuilder.create(
                     OmegaTestMain.COMMENTED_NESTED_CLASS,
-                    new LiteralText(OmegaTestMain.COMMENTED_NESTED_CLASS.getName()),
+                    Text.of(OmegaTestMain.COMMENTED_NESTED_CLASS.getName()),
                     parent
             );
-            builder.newBuilderWithSelfParent(new LiteralText("First"))
-                    .newBuilderWithSelfParent(new LiteralText("InnerFirst"))
+            builder.newBuilderWithSelfParent(Text.of("First"))
+                    .newBuilderWithSelfParent(Text.of("InnerFirst"))
                         .allFromClass(OmegaTestMain.COMMENTED_NESTED_CLASS.first.innerFirst)
                         .getParent()
                     .allFromClass(OmegaTestMain.COMMENTED_NESTED_CLASS.first);
@@ -42,8 +45,8 @@ public class OmegaTestClient implements ClientModInitializer {
         });
 
         HudRenderCallback.EVENT.register((stack, delta) -> {
-            MinecraftClient.getInstance().textRenderer.draw(stack, new LiteralText(String.valueOf(OmegaTestMain.CONFIG.v)), 15, 15, 0xffffff);
-            MinecraftClient.getInstance().textRenderer.draw(stack, new LiteralText(String.valueOf(OmegaTestMain.CONFIG.doubleTest)), 15, 30, 0xffffff);
+            MinecraftClient.getInstance().textRenderer.draw(stack, Text.of(String.valueOf(OmegaTestMain.CONFIG.v)), 15, 15, 0xffffff);
+            MinecraftClient.getInstance().textRenderer.draw(stack, Text.of(String.valueOf(OmegaTestMain.CONFIG.doubleTest)), 15, 30, 0xffffff);
         });
     }
 }

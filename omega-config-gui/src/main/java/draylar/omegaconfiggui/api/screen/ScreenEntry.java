@@ -2,7 +2,6 @@ package draylar.omegaconfiggui.api.screen;
 
 import draylar.omegaconfig.api.Config;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 
 import java.util.HashMap;
@@ -17,7 +16,7 @@ public interface ScreenEntry {
     record FieldEntry(String name, Class<?> receiverClass, Config parent, Object instance) implements ScreenEntry {
         @Override
         public Text getName() {
-            return new LiteralText(name);
+            return Text.of(name);
         }
 
         public Object getDefault() {

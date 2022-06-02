@@ -23,7 +23,7 @@
     "minecraft": "*"
   },
   "recommends": {
-    "modmenu": "3.0.1"
+    "modmenu": "*"
   },
    "custom": {
        "modmenu": {
