@@ -24,7 +24,7 @@ public class OmegaTestClient implements ClientModInitializer {
                     .allFromClass(OmegaTestMain.CONFIG.secondTest);
             builder.allOuter();
 
-            return builder.toScreen();
+            return builder.build();
         });
 
         // Comment the previous code to test this
@@ -41,7 +41,7 @@ public class OmegaTestClient implements ClientModInitializer {
                     .allFromClass(OmegaTestMain.COMMENTED_NESTED_CLASS.first);
             builder.allOuter();
 
-            return builder.toScreen();
+            return builder.build();
         });
 
         HudRenderCallback.EVENT.register((stack, delta) -> {

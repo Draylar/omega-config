@@ -63,7 +63,7 @@ public class OmegaConfigGui {
                         parent
                 )
                 .allOuter()
-                .toScreen();
+                .build();
     }
 
     public static Map<Config, OmegaScreenFactory<Screen>> getConfigScreenFactories() {

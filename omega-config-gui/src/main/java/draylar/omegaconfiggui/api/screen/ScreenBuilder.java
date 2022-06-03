@@ -71,11 +71,8 @@ public final class ScreenBuilder {
     /**
      * @return the resulting screen for this builder
      */
-    public Screen toScreen() {
-        if (this.parent != null) {
-            return new ConfigScreen(this, this.parent.toScreen());
-        }
-        return new ConfigScreen(this, modMenuScreen);
+    public Screen build() {
+        return new ConfigScreen(this, this.parent == null ? modMenuScreen : this.parent.build());
     }
 
     public ScreenBuilder run(UnaryOperator<ScreenBuilder> b) {
@@ -89,7 +86,7 @@ public final class ScreenBuilder {
      */
     public ScreenBuilder newBuilderWithSelfParent(Text title) {
         var sub = create(this.parentConfig, title, this);
-        addEntries(subScreenEntry(sub::toScreen, title));
+        addEntries(subScreenEntry(sub::build, title));
 
         return sub;
     }
