@@ -12,16 +12,24 @@ public class OmegaTestClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         OmegaConfigGui.registerConfigScreen(OmegaTestMain.CONFIG, parent -> {
+
+            // ScreenBuilder for OmegaTestMain#CONFIG
             var builder = ScreenBuilder.create(
                     OmegaTestMain.CONFIG,
                     Text.of(OmegaTestMain.CONFIG.getName()),
                     parent
             );
 
+            // Create sub-screen for the config 'firstTest'
             builder.newBuilderWithSelfParent(Text.of("Test #1"))
                     .allFromClass(OmegaTestMain.CONFIG.firstTest);
+
+            // Same as before, but using 'secondTest'. The fields on this are untranslatable as we specify so.
             builder.newBuilderWithSelfParent(Text.of("Test #2"))
-                    .allFromClass(OmegaTestMain.CONFIG.secondTest);
+                    .allFromClass(OmegaTestMain.CONFIG.secondTest, false);
+
+            // Add all fields from outer config classes.
+            // If we don't specify if we want the fields to be translated or not, it'll default to translatable fields.
             builder.allOuter();
 
             return builder.build();

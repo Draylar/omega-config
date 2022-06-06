@@ -1,3 +1,10 @@
 {
-  "config.omega-config-test.test-config": "Omega Config - Test Config"
+  "config.omega-config-test.test-config": "Omega Config - Test Config",
+
+  "configEntry.test-config.innerTest": "This is an Inner Classe config test!",
+  "configEntry.test-config.neatString": "A very neat String field",
+
+  "configEntry.test-config.v": "V?",
+  "configEntry.test-config.doubleTest": "Double Test",
+  "configEntry.test-config.stringTest": "String Test"
 }

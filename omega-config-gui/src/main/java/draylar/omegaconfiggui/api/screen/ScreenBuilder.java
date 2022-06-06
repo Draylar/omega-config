@@ -99,26 +99,58 @@ public final class ScreenBuilder {
         return parent;
     }
 
+
+    /**
+     * Adds all outer fields (non-nested and in parent class) from a config to the resulting screen.
+     * @param translated whether the fields' names on the GUI are translatable
+     * @return self
+     */
+    public ScreenBuilder allOuter(boolean translated) {
+        return allFromClass(this.parentConfig, translated);
+    }
+
     /**
      * Adds all outer fields (non-nested and in parent class) from a config to the resulting screen.
      * @return self
      */
     public ScreenBuilder allOuter() {
-        return allFromClass(this.parentConfig);
+        return allOuter(true);
     }
 
     /**
      * Adds all fields from an object to the resulting screen.
      * @param instance an instance of a possible nested class from your config
+     * @param translated whether the fields' names on the GUI are translatable
      * @return self
      */
-    public ScreenBuilder allFromClass(@NonNull Object instance) {
+    public ScreenBuilder allFromClass(@NonNull Object instance, boolean translated) {
         Objects.requireNonNull(instance);
         List<ScreenEntry> entries = new ArrayList<>();
         for (var f : instance.getClass().getFields()) {
-            entries.add(field(f.getName(), instance.getClass(), this.parentConfig, instance));
+            entries.add(field(f.getName(), instance.getClass(), this.parentConfig, instance, translated));
         }
         return addEntries(entries);
+    }
+
+    /**
+     * Adds all fields from an object to the resulting screen. Said fields will not be translatable.
+     * @param instance an instance of a possible nested class from your config
+     * @return self
+     */
+    public ScreenBuilder allFromClass(@NonNull Object instance) {
+        return allFromClass(instance, true);
+    }
+
+    /**
+     * @param name the field name
+     * @param receiverClass the declaring class from the field
+     * @param parent the parent config
+     * @param instance the instance to get/set this field
+     * @param translated whether the entry's name on the GUI is translatable
+     * @return a new {@link draylar.omegaconfiggui.api.screen.ScreenEntry.FieldEntry}
+     */
+    public static ScreenEntry field(String name, Class<?> receiverClass, Config parent, Object instance, boolean translated) {
+        return new ScreenEntry.FieldEntry(name, receiverClass, parent, instance, translated);
     }
 
     /**
@@ -129,7 +161,7 @@ public final class ScreenBuilder {
      * @return a new {@link draylar.omegaconfiggui.api.screen.ScreenEntry.FieldEntry}
      */
     public static ScreenEntry field(String name, Class<?> receiverClass, Config parent, Object instance) {
-        return new ScreenEntry.FieldEntry(name, receiverClass, parent, instance);
+        return field(name, receiverClass, parent, instance, true);
     }
 
     /**

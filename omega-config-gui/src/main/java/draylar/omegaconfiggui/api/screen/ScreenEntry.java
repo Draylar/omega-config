@@ -13,10 +13,10 @@ public interface ScreenEntry {
 
     Text getName();
 
-    record FieldEntry(String name, Class<?> receiverClass, Config parent, Object instance) implements ScreenEntry {
+    record FieldEntry(String name, Class<?> receiverClass, Config parent, Object instance, boolean translated) implements ScreenEntry {
         @Override
         public Text getName() {
-            return Text.of(name);
+            return translated ? Text.translatable(String.format("configEntry.%s.%s", parent.getName(), name)) : Text.of(name);
         }
 
         public Object getDefault() {
