@@ -6,6 +6,7 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 
 public class OmegaTestClient implements ClientModInitializer {
 
@@ -16,16 +17,18 @@ public class OmegaTestClient implements ClientModInitializer {
             // ScreenBuilder for OmegaTestMain#CONFIG
             var builder = ScreenBuilder.create(
                     OmegaTestMain.CONFIG,
-                    Text.of(OmegaTestMain.CONFIG.getName()),
+                    Text.of(OmegaTestMain.CONFIG.getName()), // Set title
+                    new Identifier("textures/block/diamond_block.png"), // Sets custom background texture
                     parent
             );
 
-            // Create sub-screen for the config 'firstTest'
+            // Create sub-screen for the config 'firstTest' without a custom background texture
             builder.newBuilderWithSelfParent(Text.of("Test #1"))
                     .allFromClass(OmegaTestMain.CONFIG.firstTest);
 
             // Same as before, but using 'secondTest'. The fields on this are untranslatable as we specify so.
-            builder.newBuilderWithSelfParent(Text.of("Test #2"))
+            // Uses gold block's texture as background.
+            builder.newBuilderWithSelfParent(Text.of("Test #2"), new Identifier("textures/block/gold_block.png"))
                     .allFromClass(OmegaTestMain.CONFIG.secondTest, false);
 
             // Add all fields from outer config classes.

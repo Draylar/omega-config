@@ -251,7 +251,7 @@ public class ConfigScreen extends Screen {
         var matrix = matrices.peek().getPositionMatrix();
         Tessellator tess = Tessellator.getInstance();
         BufferBuilder buffer = tess.getBuffer();
-        RenderSystem.setShaderTexture(0, OPTIONS_BACKGROUND_TEXTURE);
+        RenderSystem.setShaderTexture(0, builder.getBackgroundTexture());
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
         buffer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE_COLOR);
@@ -260,6 +260,20 @@ public class ConfigScreen extends Screen {
         buffer.vertex(matrix, width, minY, 0.0F).texture(width / 32.0F, minY / 32.0F).color(c, c, c, 255).next();
         buffer.vertex(matrix, 0, minY, 0.0F).texture(0 / 32.0F, minY / 32.0F).color(c, c, c, 255).next();
         tess.draw();
+    }
+
+    public void renderBackgroundTexture(int vOffset) {
+        Tessellator tessellator = Tessellator.getInstance();
+        BufferBuilder bufferBuilder = tessellator.getBuffer();
+        RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
+        RenderSystem.setShaderTexture(0, builder.getBackgroundTexture());
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE_COLOR);
+        bufferBuilder.vertex(0.0, this.height, 0.0).texture(0.0F, (float)this.height / 32.0F + (float)vOffset).color(64, 64, 64, 255).next();
+        bufferBuilder.vertex(this.width, this.height, 0.0).texture((float)this.width / 32.0F, (float)this.height / 32.0F + (float)vOffset).color(64, 64, 64, 255).next();
+        bufferBuilder.vertex(this.width, 0.0, 0.0).texture((float)this.width / 32.0F, (float)vOffset).color(64, 64, 64, 255).next();
+        bufferBuilder.vertex(0.0, 0.0, 0.0).texture(0.0F, (float)vOffset).color(64, 64, 64, 255).next();
+        tessellator.draw();
     }
 
     public int scrollHeight() {
