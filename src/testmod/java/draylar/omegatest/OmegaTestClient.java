@@ -14,22 +14,21 @@ public class OmegaTestClient implements ClientModInitializer {
     public void onInitializeClient() {
         OmegaConfigGui.registerConfigScreen(OmegaTestMain.CONFIG, parent -> {
 
-            // ScreenBuilder for OmegaTestMain#CONFIG
+            // ScreenBuilder for OmegaTestMain#CONFIG, using Diamond Block's texture as a custom background
             var builder = ScreenBuilder.create(
                     OmegaTestMain.CONFIG,
-                    Text.of(OmegaTestMain.CONFIG.getName()), // Set title
-                    new Identifier("textures/block/diamond_block.png"), // Sets custom background texture
+                    Text.of(OmegaTestMain.CONFIG.getName()),
                     parent
-            );
+            ).withCustomBackground(new Identifier("textures/block/diamond_block.png"));
 
-            // Create sub-screen for the config 'firstTest' without a custom background texture
+            // Create sub-screen for the config 'firstTest'
             builder.newBuilderWithSelfParent(Text.of("Test #1"))
                     .allFromClass(OmegaTestMain.CONFIG.firstTest);
 
             // Same as before, but using 'secondTest'. The fields on this are untranslatable as we specify so.
-            // Uses gold block's texture as background.
-            builder.newBuilderWithSelfParent(Text.of("Test #2"), new Identifier("textures/block/gold_block.png"))
-                    .allFromClass(OmegaTestMain.CONFIG.secondTest, false);
+            builder.newBuilderWithSelfParent(Text.of("Test #2"))
+                    .allFromClass(OmegaTestMain.CONFIG.secondTest, false)
+                    .withCustomBackground(new Identifier("textures/block/gold_block.png")); // Use Gold Block's texture as background.
 
             // Add all fields from outer config classes.
             // If we don't specify if we want the fields to be translated or not, it'll default to translatable fields.

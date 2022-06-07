@@ -20,29 +20,19 @@ public final class ScreenBuilder {
     private final Config parentConfig;
     public final List<ScreenEntry> entries = new ArrayList<>();
     public final Text title;
-    public final Identifier backgroundTexture;
+    @Nullable
+    private Identifier backgroundTexture;
     @Nullable
     private final ScreenBuilder parent;
     private final Screen modMenuScreen;
 
-    ScreenBuilder(Config parentConfig, Text title, @Nullable Identifier backgroundTexture, @Nullable ScreenBuilder parent, Screen modMenuScreen) {
+    ScreenBuilder(Config parentConfig, Text title, @Nullable ScreenBuilder parent, Screen modMenuScreen) {
         this.parentConfig = parentConfig;
         this.title = title;
-        this.backgroundTexture = backgroundTexture;
         this.parent = parent;
         this.modMenuScreen = modMenuScreen;
     }
 
-    /**
-     * @param parentConfig the receiver config
-     * @param title the screen title
-     * @param backgroundTexture the screen's background texture. Use null for Minecraft's default.
-     * @param modMenuScreen the parent screen
-     * @return A new ScreenBuilder without a parent
-     */
-    public static ScreenBuilder create(Config parentConfig, Text title, @Nullable Identifier backgroundTexture, Screen modMenuScreen) {
-        return new ScreenBuilder(parentConfig, title, backgroundTexture, null, modMenuScreen);
-    }
 
     /**
      * @param parentConfig the receiver config
@@ -51,30 +41,17 @@ public final class ScreenBuilder {
      * @return A new ScreenBuilder without a parent
      */
     public static ScreenBuilder create(Config parentConfig, Text title, Screen modMenuScreen) {
-        return create(parentConfig, title, null, modMenuScreen);
+        return new ScreenBuilder(parentConfig, title, null, modMenuScreen);
     }
 
     /**
-     * Use this when creating sub-screens for a config screen.
-     * @param parentConfig the receiver config
-     * @param title the screen title
-     * @param backgroundTexture the screen's background texture. Use null for Minecraft's default.
-     * @param parent this builder's parent
-     * @return A new builder with a parent
-     */
-    public static ScreenBuilder createSubScreen(Config parentConfig, Text title, @Nullable Identifier backgroundTexture, ScreenBuilder parent) {
-        return new ScreenBuilder(parentConfig, title, backgroundTexture, parent, parent.modMenuScreen);
-    }
-
-    /**
-     * Use this when creating sub-screens for a config screen.
      * @param parentConfig the receiver config
      * @param title the screen title
      * @param parent this builder's parent
      * @return A new builder with a parent
      */
     public static ScreenBuilder createSubScreen(Config parentConfig, Text title, ScreenBuilder parent) {
-        return createSubScreen(parentConfig, title, null, parent);
+        return new ScreenBuilder(parentConfig, title, parent, parent.modMenuScreen);
     }
 
 
@@ -97,6 +74,15 @@ public final class ScreenBuilder {
     }
 
     /**
+     * @param backgroundTexture the {@link Identifier} of a texture to be used as the background.
+     * @return self
+     */
+    public ScreenBuilder withCustomBackground(Identifier backgroundTexture) {
+        this.backgroundTexture = backgroundTexture;
+        return this;
+    }
+
+    /**
      * @return the resulting screen for this builder
      */
     public Screen build() {
@@ -111,24 +97,15 @@ public final class ScreenBuilder {
     /**
      * Creates a new builder that has {@code this} as a parent.
      * @param title the resulting screen title
-     * @param backgroundTexture the screen's background texture. Use null for Minecraft's default.
      * @return a new builder from self
      */
-    public ScreenBuilder newBuilderWithSelfParent(Text title, Identifier backgroundTexture) {
-        var sub = createSubScreen(this.parentConfig, title, backgroundTexture, this);
+    public ScreenBuilder newBuilderWithSelfParent(Text title) {
+        var sub = createSubScreen(this.parentConfig, title, this);
         addEntries(subScreenEntry(sub::build, title));
 
         return sub;
     }
 
-    /**
-     * Creates a new builder that has {@code this} as a parent.
-     * @param title the resulting screen title
-     * @return a new builder from self
-     */
-    public ScreenBuilder newBuilderWithSelfParent(Text title) {
-        return newBuilderWithSelfParent(title, null);
-    }
 
     /**
      * @return the parent of this builder
@@ -143,6 +120,14 @@ public final class ScreenBuilder {
      */
     public Identifier getBackgroundTexture() {
         return backgroundTexture != null ? backgroundTexture : DrawableHelper.OPTIONS_BACKGROUND_TEXTURE;
+    }
+
+    /**
+     * Checks if a custom background texture has been set.
+     * @return whether a custom background has been chosen.
+     */
+    public boolean hasCustomBackgroundTexture() {
+        return backgroundTexture != null;
     }
 
 
