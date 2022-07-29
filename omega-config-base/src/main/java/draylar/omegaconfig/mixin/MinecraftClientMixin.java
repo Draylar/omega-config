@@ -21,7 +21,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @Mixin(MinecraftClient.class)
-public class ClientMixin {
+public class MinecraftClientMixin {
 
     @Unique
     private final List<Config> savedClientConfig = new ArrayList<>(); // stored config from before sync is applied
