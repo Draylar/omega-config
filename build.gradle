@@ -89,3 +89,14 @@ sourceSets {
         runtimeClasspath += main.runtimeClasspath
     }
 }
+
+// For running the test mod
+loom {
+    runs {
+        testMod {
+            inherit client
+
+            source = project.sourceSets.testmod
+        }
+    }
+}

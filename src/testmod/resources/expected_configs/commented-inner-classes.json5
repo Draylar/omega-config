@@ -1,0 +1,49 @@
+{
+  //Very nested test
+  "first": {
+    //Cucumbers
+    "cucumbers": true,
+    //InnerFirst
+    "innerFirst": {
+      //Number of Tomatoes
+      "numberOfTomatoes": 10
+    },
+    //InnerSecond
+    "innerSecond": {
+      //Inner Second First
+      "innerSecondFirst": {
+        //Olive Oil
+        "oliveOil": "oliveOil"
+      }
+    }
+  },
+  //True
+  "test": false,
+  //First-Level
+  "veryNested": {
+    //Second-Level
+    "very": {
+      //Third-Level
+      "veryVery": {
+        //Forth-Level
+        "veryVeryVery": {
+          //Fifth-Level
+          "veryVeryVeryVery": {
+            //Sixth-Level
+            "last": "last"
+          }
+        }
+      }
+    }
+  },
+  //Nested outer class
+  "nestedConfig": {
+    //Nested test
+    "test": false,
+    //Nested inner static class
+    "nestedInner": {
+      //NestedInner
+      "spoorn": "owl"
+    }
+  }
+}
