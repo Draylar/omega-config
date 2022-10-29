@@ -1,0 +1,12 @@
+{
+  //Hello!
+  "v": false,
+  //I'm a double.
+  "doubleTest": 0.0,
+  "stringTest": "Hello, world!",
+  //This is an inner static class.
+  "test": {
+    //This is the value inside the class!
+    "innerTest": false
+  }
+}

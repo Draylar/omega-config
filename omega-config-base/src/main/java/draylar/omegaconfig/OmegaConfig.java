@@ -24,12 +24,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 public class OmegaConfig implements ModInitializer {
 
@@ -109,38 +104,57 @@ public class OmegaConfig implements ModInitializer {
         // Cursed time.
         List<String> lines = new ArrayList<>(Arrays.asList(json.split("\n")));
         Map<Integer, String> insertions = new TreeMap<>();
-        Map<String, String> keyToComments = new HashMap<>();
-
-        // populate key -> comments map
-        for (Field field : configClass.getDeclaredFields()) {
-            addFieldComments(field, keyToComments);
-        }
-
-        // "flattens" all the inner classes of the Config class into a single list
-        for (Class<?> clazz : flatten(configClass.getDeclaredClasses())) {
-            for (Field field : clazz.getDeclaredFields()) {
-                addFieldComments(field, keyToComments);
-            }
-        }
+        Map<String, String> keyToComments = populateKeyPathToComments(configClass);
 
         // Find areas we should insert comments into...
+
+        // Prefix stack that keeps track of the nested json element's parents
+        Deque<String> prefix = new ArrayDeque<>();
+        int currIndent = 1;  // Past the root, indents start at 1
         for (int i = 0; i < lines.size(); i++) {
             String at = lines.get(i);
-            String startingWhitespace = getStartingWhitespace(at);
+            String trimmed = at.trim();
 
-            for (Map.Entry<String, String> entry : keyToComments.entrySet()) {
-                String comment = entry.getValue();
-                // Check if we should insert comment
-                if (at.trim().startsWith(String.format("\"%s\"", entry.getKey()))) {
-                    if (comment.contains("\n")) {
-                        comment = startingWhitespace + "//" + String.join(String.format("\n%s//", startingWhitespace), comment.split("\n"));
-                    } else {
-                        comment = String.format("%s//%s", startingWhitespace, comment);
-                    }
-                    insertions.put(i + insertions.size(), comment);
-                    break;
+            // Exited a json structure, pop the prefix stack
+            int indents = countGsonIndents(at);
+            if (indents <= currIndent) {
+                if (!prefix.isEmpty()) {
+                    prefix.removeLast();
                 }
             }
+
+            // Fields start with a quote "
+            if (trimmed.startsWith("\"")) {
+                // Remove quotes around the "key"
+                String key = trimmed.substring(1, trimmed.indexOf("\"", 1));
+
+                // Push onto the prefix stack, appending onto the previous prefix if nested, else just the key itself
+                if (indents >= currIndent) {
+                    if (prefix.isEmpty()) {
+                        prefix.addLast(key);
+                    } else {
+                        prefix.addLast(prefix.peekLast() + "." + key);
+                    }
+                }
+
+                String startingWhitespace = "  ".repeat(indents);
+
+                for (Map.Entry<String, String> entry : keyToComments.entrySet()) {
+                    String comment = entry.getValue();
+                    // Check if we should insert comment
+                    if (entry.getKey().equals(prefix.peekLast())) {
+                        if (comment.contains("\n")) {
+                            comment = startingWhitespace + "//" + String.join(String.format("\n%s//", startingWhitespace), comment.split("\n"));
+                        } else {
+                            comment = String.format("%s//%s", startingWhitespace, comment);
+                        }
+                        insertions.put(i + insertions.size(), comment);
+                        break;
+                    }
+                }
+            }
+
+            currIndent = indents;
         }
 
         // insertions -> list
@@ -164,70 +178,93 @@ public class OmegaConfig implements ModInitializer {
         }
     }
 
-    public static List<Class<?>> flatten(Class<?>[] array) {
-        List<Class<?>> list = new ArrayList<>();
-
-        for (Class<?> clazz : array) {
-            populateRecursively(list, clazz);
-        }
-
-        return list;
+    /**
+     * Fetches comments from Json key "paths".  A path is the key itself if at the root top-level, else a period
+     * delimited path from the root to the key.
+     * 
+     * For example, if this were our commented json:
+     *    ```
+     *     {
+     *         // first comment
+     *         "first": 1,
+     *         // nested comment
+     *         "nested": {
+     *             // second comment
+     *             "second": 2,
+     *             // more nested comment
+     *             "morenested": {
+     *                 // third comment
+     *                 "third": 3
+     *             }
+     *         }
+     *     }
+     *    ```
+     *    
+     * The returned map would be:
+     *    ```
+     *    "first" => "first comment"
+     *    "nested" => "nested comment"
+     *    "nested.second" => "second comment"
+     *    "nested.morenested" => "more nested comment"
+     *    "nested.morenested.third" => "third comment"
+     *    ```
+     * 
+     * @param root Root class to recursively map field path keys to comments
+     * @return Mapping from field path keys to comments
+     */
+    public static Map<String, String> populateKeyPathToComments(Class<?> root) {
+        Map<String, String> keyPathToComments = new HashMap<>();
+        populateKeyPathToComments(root, "", keyPathToComments, new HashSet<>());
+        return keyPathToComments;
     }
 
-    private static void populateRecursively(List<Class<?>> list, Class<?> aClass) {
-        list.add(aClass);
+    /**
+     * Counts number of indents.  Gson uses double space as the default indent.
+     */
+    public static int countGsonIndents(String s) {
+        String indent = "  ";
+        int count = 0;
+        while (s.startsWith(indent)) {
+            count++;
+            s = s.substring(indent.length());
+        }
+        return count;
+    }
 
-        Class<?>[] classes = aClass.getDeclaredClasses();
+    /**
+     * Finds all comments recursively.
+     */
+    private static void populateKeyPathToComments(Class<?> clazz, String prefix, Map<String, String> keyPathToComments,
+                                                  Set<Class<?>> visited) {
+        if (visited.contains(clazz)) {
+            return;
+        }
 
-        if (classes.length != 0) {
-            for (Class<?> clazz : classes) {
-                populateRecursively(list, clazz);
+        visited.add(clazz);
+        for (Field field : clazz.getDeclaredFields()) {
+            String comment = getFieldComment(field);
+            String key = prefix + field.getName();
+            // populate top-level key -> comments map
+            if (comment != null) {
+                keyPathToComments.put(key, comment);
             }
+
+            // Recurse on field classes
+            populateKeyPathToComments(field.getType(), key + ".", keyPathToComments, visited);
         }
     }
 
-    private static void addFieldComments(Field field, Map<String, String> keyToComments) {
-        String fieldName = field.getName();
+    private static String getFieldComment(Field field) {
         Annotation[] annotations = field.getDeclaredAnnotations();
 
         // Find comment
         for (Annotation annotation : annotations) {
             if (annotation instanceof Comment) {
-                keyToComments.put(fieldName, ((Comment) annotation).value());
-                break;
-            }
-        }
-    }
-
-    /**
-     * Returns a string with the left-side whitespace characters of the given input, up till the first non-whitespace character.
-     *
-     * <p>
-     * "   hello" -> "   "
-     * "p" -> ""
-     * " p" -> " "
-     *
-     * @param input input to retrieve whitespaces from
-     * @return starting whitespaces from the given input
-     */
-    private static String getStartingWhitespace(String input) {
-        int index = -1;
-
-        char[] chars = input.toCharArray();
-        for (int i = 0; i < chars.length; i++) {
-            char at = chars[i];
-
-            if (at != ' ') {
-                index = i;
-                break;
+                return ((Comment) annotation).value();
             }
         }
 
-        if (index != -1) {
-            return input.substring(0, index);
-        } else {
-            return "";
-        }
+        return null;
     }
 
     public static Path getConfigPath(Config config) {

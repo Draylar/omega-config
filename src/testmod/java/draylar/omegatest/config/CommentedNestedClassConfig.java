@@ -2,6 +2,7 @@ package draylar.omegatest.config;
 
 import draylar.omegaconfig.api.Comment;
 import draylar.omegaconfig.api.Config;
+import draylar.omegatest.config.nested.NestedConfig;
 
 public class CommentedNestedClassConfig implements Config {
 
@@ -13,6 +14,9 @@ public class CommentedNestedClassConfig implements Config {
 
     @Comment("First-Level")
     public VeryNested veryNested = new VeryNested();
+    
+    @Comment("Nested outer class")
+    public NestedConfig nestedConfig = new NestedConfig();
 
     public static class First {
         @Comment("Cucumbers")
