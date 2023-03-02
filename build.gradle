@@ -1,10 +1,10 @@
 plugins {
-    id "fabric-loom" version "0.10-SNAPSHOT"
+    id "fabric-loom" version "1.1-SNAPSHOT"
     id "maven-publish"
     id "java-library"
 }
 
-group = "draylar"
+group = "dev.draylar"
 archivesBaseName = "omega-config"
 
 subprojects {
@@ -12,10 +12,21 @@ subprojects {
     apply plugin: 'maven-publish'
 
     archivesBaseName = project.name
-    group = "draylar.${project.group}"
+    group = "dev.draylar.${project.group}"
 
     // Only publish for submodules (not the root project)  - add standard jar, + sources & development jar
     publishing {
+        repositories {
+            maven {
+                name = "draylarRepository"
+                url = "https://maven.draylar.dev/releases"
+                credentials(PasswordCredentials)
+                authentication {
+                    basic(BasicAuthentication)
+                }
+            }
+        }
+
         publications {
             mavenJava(MavenPublication) {
                 from components.java
@@ -33,7 +44,7 @@ subprojects {
 allprojects {
     apply plugin: "fabric-loom"
     sourceCompatibility = targetCompatibility = JavaVersion.VERSION_17
-    version = project.mod_version + "-" + project.minecraft_version
+    version = project.mod_version + "+" + project.minecraft_version
 
     repositories {
         maven {

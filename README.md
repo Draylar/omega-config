@@ -1,8 +1,7 @@
-# ΩConfig
+<h1 align="center">Omega Config Ω </h1>
+<p align="center">A configuration library by <a href="https://github.com/Draylar">Draylar</a></p>
 
 ---
-
-*The last config library you will ever use.*
 
 ΩConfig is a hyper-minimal config library based on [Auto Config](https://github.com/shedaniel/AutoConfig). It aims to
 achieve the following goals:
@@ -19,6 +18,10 @@ public class TestConfig implements Config {
 
     @Comment(value = "Hello!")
     boolean value = false;
+
+    @Syncing
+    @Comment(value = "This value will sync to the client!")
+    boolean syncableValue = false;
 
     @Override
     public String getFileName() {
@@ -63,12 +66,12 @@ you can use the following gradle declarations:
 
 ```groovy
 repositories {
-    maven { url 'https://jitpack.io' }
+    maven { url 'https://maven.draylar.dev/releases' }
 }
 
+// 1.19.2 version: 1.3.0+1.19.2
 dependencies {
-    include("com.github.Draylar.omega-config:omega-config-base:${project.omega_config_version}")
-    modImplementation("com.github.Draylar.omega-config:omega-config-base:${project.omega_config_version}")
+    modImplementation include("dev.draylar.omega-config:omega-config-base:${project.omega_config_version}")
 }
 ```
 
@@ -95,8 +98,7 @@ repositories {
 dependencies {
     ... (including the base declarations)
     
-    include("com.github.Draylar.omega-config:omega-config-gui:${project.omega_config_version}")
-    modImplementation("com.github.Draylar.omega-config:omega-config-gui:${project.omega_config_version}")
+    modImplementation include("dev.draylar.omega-config:omega-config-gui:${project.omega_config_version}")
     modRuntimeOnly ("com.terraformersmc:modmenu:${project.modmenu_version}") // 3.0.1 for 1.18.1
 }
 ```
@@ -110,12 +112,12 @@ dependencies {
 **save()** - *saves a modified configuration instance to disk*
 
 ```java
-MyModInitializer.CONFIG.value=false;
-        MyModInitializer.CONFIG.save(); // writes the new value to disk
+MyModInitializer.CONFIG.value = false;
+MyModInitializer.CONFIG.save(); // writes the new value to disk
 ```
 
 
-**@Syncing** - *configuration options marked with this annotation will automatically sync to the client when they join a server.*
+`@Syncing` - *configuration options marked with this annotation will automatically sync to the client when they join a server.*
 
 ---
 

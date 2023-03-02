@@ -9,8 +9,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.text.LiteralText;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -56,12 +55,12 @@ public class OmegaConfigGui {
         return parent -> {
             try {
                 Config defaultConfig = config.getClass().getDeclaredConstructor().newInstance();
-                ConfigScreen screen = ConfigScreen.create(new TranslatableText(String.format("config.%s.%s", config.getModid(), config.getName())), parent);
+                ConfigScreen screen = ConfigScreen.create(Text.translatable(String.format("config.%s.%s", config.getModid(), config.getName())), parent);
 
                 // Fields
                 for (Field field : config.getClass().getDeclaredFields()) {
                     try {
-                        screen.add(new LiteralText(field.getName()), field.get(config), () -> {
+                        screen.add(Text.of(field.getName()), field.get(config), () -> {
                             try {
                                 return field.get(defaultConfig);
                             } catch (IllegalAccessException e) {
