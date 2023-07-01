@@ -12,4 +12,3 @@ pluginManagement {
 rootProject.name = 'omega-config'
 
 include 'omega-config-base'
-include 'omega-config-gui'

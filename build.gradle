@@ -82,7 +82,6 @@ allprojects {
 // Main project depends on the base & gui module for testing
 dependencies {
     implementation project(path: ":omega-config-base", configuration: "namedElements")
-    implementation project(path: ":omega-config-gui", configuration: "namedElements")
 
     afterEvaluate {
         testmodImplementation sourceSets.main.output
